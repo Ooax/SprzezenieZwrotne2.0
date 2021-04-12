@@ -1,0 +1,6 @@
+sprzezenie-zwrotne-backend/.env
+sprzezenie-zwrotne-backend/node_modules
+sprzezenie-zwrotne-frontend/node_modules
+sprzezenie-zwrotne-backend/package-lock.json
+sprzezenie-zwrotne-frontend/package-lock.json
+sprzezenie-zwrotne-frontend/.eslintcache

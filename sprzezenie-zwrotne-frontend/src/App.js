@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import MainView from './components/mainView';
 import LogoutButton from './components/logout';
 import i18n from "./i18n";
-import { useTranslation } from "react-i18next";
+import { I18nContext, useTranslation } from "react-i18next";
 
 const drawerWidth = 200;
 
@@ -93,7 +93,8 @@ function App() {
             </Typography>
             <FormControl variant="outlined">
             <InputLabel id="select-language-label"></InputLabel>
-            <Select labelId="select-language-label" id="select-language" onChange={(event) => changeLanguage(event.target.value)} style={{width: '200px', color: "white"}}>
+            <Select labelId="select-language-label" id="select-language"
+            displayEmpty value={i18n.language} onChange={(event) => changeLanguage(event.target.value)} style={{width: '200px', color: "white"}}>
                 <MenuItem value="pl">polski</MenuItem>
                 <MenuItem value="en">english</MenuItem>
             </Select>
@@ -121,10 +122,10 @@ function App() {
         <AppBar position="fixed" className={classStyles.appBar} >
           <Toolbar>
             <Typography variant="h6" className={classStyles.title}>
-              System ankiet
+              {t('Title')}
             </Typography>
             <Button color="inherit" href="http://localhost:5000/login" target="_self" onClick={(event) => event.preventDefault}>
-              Zaloguj
+              {t('Login')}
             </Button>
           </Toolbar>
         </AppBar>
@@ -135,14 +136,4 @@ function App() {
     )
   }
 }
-
-// function ChooseLanguage(e) {
-//   //alert(document.getElementById('select-language').value);
-//   language = e.target.value;
-//   alert(language);
-//   //alert(language);
-//   //document.getElementById('select-language').addEventListener('change', function() {
-//     //console.log('You selected: ', this.value);
-//   //});
-// }
 export default App;

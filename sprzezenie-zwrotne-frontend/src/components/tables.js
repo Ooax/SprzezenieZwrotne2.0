@@ -5,6 +5,7 @@ import EqualizerIcon from '@material-ui/icons/Equalizer';
 import AddIcon from '@material-ui/icons/Add';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import SettingsIcon from '@material-ui/icons/Settings';
+import i18n from '../i18n';
 
 //Tabela ankiet USOS
 export class SurveysUSOSTable extends React.Component {
@@ -30,7 +31,7 @@ export class SurveysUSOSTable extends React.Component {
                     <TableCell component="th" scope="row">
                         {course_info.course_id}
                     </TableCell>
-                    <TableCell>{course_info.course_name["pl"] + " " + course_info.term_id + " [" + course_info.classtype_id + "] "}</TableCell>
+                    <TableCell>{course_info.course_name[i18n.language] + " " + course_info.term_id + " [" + course_info.classtype_id + "] "}</TableCell>
                     <TableCell>{lecturer.first_name + " " + lecturer.last_name}</TableCell>
                     <TableCell>
                         <IconButton color="primary" aria-label="choose-survey" onClick={() => { this.onChosen(id) }} style={{color: lightBlue[600], background: grey[200]}}>
@@ -101,7 +102,7 @@ export class SurveysTable extends React.Component {
                     <TableCell component="th" scope="row">
                         {courseInfo.courseId}
                     </TableCell>
-                    <TableCell>{courseInfo.courseName["pl"] + " " + courseInfo.termId + " [" + courseInfo.classType + "] "}</TableCell>
+                    <TableCell>{courseInfo.courseName[i18n.language] + " " + courseInfo.termId + " [" + courseInfo.classType + "] "}</TableCell>
                     <TableCell>{lecturer.first_name + " " + lecturer.last_name}</TableCell>
                     <TableCell>
 
@@ -165,7 +166,7 @@ export class StaffSurveysTable extends React.Component {
                     <TableCell component="th" scope="row">
                         {courseInfo.courseId}
                     </TableCell>
-                    <TableCell>{courseInfo.courseName["pl"] + " " + courseInfo.termId}</TableCell>
+                    <TableCell>{courseInfo.courseName[i18n.language] + " " + courseInfo.termId}</TableCell>
                     <TableCell>{" [" + courseInfo.classType + "] "}</TableCell>
                     <TableCell>
                             {
@@ -264,7 +265,7 @@ export class CoursesTable extends React.Component {
                     <TableCell component="th" scope="row">
                         {course_id}
                     </TableCell>
-                    <TableCell>{course_name["pl"] + " ["+class_type_id+"]"}</TableCell>
+                    <TableCell>{course_name[i18n.language] + " ["+class_type_id+"]"}</TableCell>
                     <TableCell>{term_id}</TableCell>
                     <TableCell>
                         <Tooltip title="Dodaj ankietę" aria-label="fill-out-survey">

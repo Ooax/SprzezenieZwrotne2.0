@@ -2,6 +2,7 @@ import React from 'react';
 import { Typography, Box, IconButton, Select, InputLabel, MenuItem, FormControl, FormHelperText, TextField, Button } from '@material-ui/core';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { withTranslation } from 'react-i18next';
+import i18n from '../i18n';
 
 //Komponent zarzadzania ustawieniami ankiet
 function getCorrectDateFormat(inputDate) {
@@ -134,7 +135,7 @@ class SurveySettings extends React.Component {
                     </Box>
                     <Box>
                         <Typography variant="h5" display="inline">
-                                {this.state.surveyData.courseInfo.courseId + " - " + this.state.surveyData.courseInfo.courseName["pl"] + " [" + this.state.surveyData.courseInfo.classType + "] " +
+                                {this.state.surveyData.courseInfo.courseId + " - " + this.state.surveyData.courseInfo.courseName[i18n.language] + " [" + this.state.surveyData.courseInfo.classType + "] " +
                                 this.state.surveyData.courseInfo.termId}
                         </Typography>
                     </Box>

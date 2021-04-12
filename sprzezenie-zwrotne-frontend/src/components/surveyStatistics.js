@@ -5,6 +5,7 @@ import {HorizontalBar} from 'react-chartjs-2';
 import lightBlue from '@material-ui/core/colors/lightBlue';
 import { SurveyCommentsTable } from './tables.js';
 import { withTranslation } from 'react-i18next';
+import i18n from '../i18n';
 
 
 //Komponent statystyk ankiety
@@ -163,7 +164,7 @@ class SurveyStatistics extends React.Component {
                     </Box>
                     <Box>
                         <Typography variant="h5" display="inline">
-                                {this.state.surveyData.courseInfo.courseId + " - " + this.state.surveyData.courseInfo.courseName["pl"] + " [" + this.state.surveyData.courseInfo.classType + "] " +
+                                {this.state.surveyData.courseInfo.courseId + " - " + this.state.surveyData.courseInfo.courseName[i18n.language] + " [" + this.state.surveyData.courseInfo.classType + "] " +
                                 this.state.surveyData.courseInfo.termId}
                         </Typography>
                     </Box>

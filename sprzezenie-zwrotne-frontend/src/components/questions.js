@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, Button, IconButton, Box, Checkbox, FormGroup, TextField } from '@material-ui/core';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import i18n from '../i18n';
 
 //Komponent wyswietlajacy pytania i odpowiedzi ankiet USOS
 export class SurveyUSOSComponent extends React.Component {
@@ -66,7 +67,7 @@ export class SurveyUSOSComponent extends React.Component {
                         <FormControl component="fieldset">
                             <FormLabel component="legend">
                                 <Typography variant="h6">
-                                    {(index + 1) + ". " + question.display_text_html["pl"]}
+                                    {(index + 1) + ". " + question.display_text_html[i18n.language]}
                                 </Typography>
                             </FormLabel>
                                 <RadioGroup aria-label="question" name={"question_"+index+"_radioGroup"} onChange={(event) => this.handleRadioChange(event, question.id)}>
@@ -85,7 +86,7 @@ export class SurveyUSOSComponent extends React.Component {
         return data.map(function (answer, index) {
             const { display_text_html, id } = answer;
             return (
-                <FormControlLabel key = {"answer_"+index} value={id} control={<Radio color="primary"/>} label={display_text_html["pl"]}/>
+                <FormControlLabel key = {"answer_"+index} value={id} control={<Radio color="primary"/>} label={display_text_html[i18n.language]}/>
             )
         })
     }
@@ -118,13 +119,13 @@ export class SurveyUSOSComponent extends React.Component {
                     </IconButton>
                     <Box ml={3}>
                         <Typography variant="h5" display="inline">
-                            {this.props.data.name["pl"]}
+                            {this.props.data.name[i18n.language]}
                         </Typography>
                     </Box>
                 </Box>
                 <Box mb={2}>
                     <Typography variant="h6">
-                            {this.props.data.course_info.course_id + " - " + this.props.data.course_info.course_name["pl"] + " [" + this.props.data.course_info.classtype_id + "] " +
+                            {this.props.data.course_info.course_id + " - " + this.props.data.course_info.course_name[i18n.language] + " [" + this.props.data.course_info.classtype_id + "] " +
                              this.props.data.course_info.term_id + " - " + this.props.data.lecturer.first_name + " " + this.props.data.lecturer.last_name}
                     </Typography>
                 </Box>
@@ -332,7 +333,7 @@ export class SurveyComponent extends React.Component {
                 </Box>
                 <Box mb={2}>
                     <Typography variant="h6">
-                            {this.props.data.courseInfo.courseId + " - " + this.props.data.courseInfo.courseName["pl"] + " [" + this.props.data.courseInfo.classType + "] " +
+                            {this.props.data.courseInfo.courseId + " - " + this.props.data.courseInfo.courseName[i18n.language] + " [" + this.props.data.courseInfo.classType + "] " +
                              this.props.data.courseInfo.termId + " - " + this.props.data.lecturer.first_name + " " + this.props.data.lecturer.last_name}
                     </Typography>
                 </Box>

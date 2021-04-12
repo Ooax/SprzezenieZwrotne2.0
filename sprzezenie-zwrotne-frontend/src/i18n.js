@@ -6,6 +6,7 @@ i18n.use(LanguageDetector).init({
         en: {
             translations: {
                 Title: "Survey system",
+                Login: "Login",
                 Logout: "Logout",
                 ChooseCourse: "Choose course with for which you want create a survey",
                 AnswerType: "Answer type",
@@ -61,6 +62,7 @@ i18n.use(LanguageDetector).init({
         pl: {
             translations: {
                 Title: "System ankiet",
+                Login: "Zaloguj",
                 Logout: "Wyloguj",
                 ChooseCourse: "Wybierz kurs do którego chcesz utworzyć ankietę",
                 AnswerType: "Rodzaj odpowiedzi",

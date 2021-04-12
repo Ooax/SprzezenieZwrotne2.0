@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography, Box, IconButton, Select, InputLabel, MenuItem, FormControl, FormHelperText, TextField, Button } from '@material-ui/core';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import { withTranslation } from 'react-i18next';
 
 //Komponent zarzadzania ustawieniami ankiet
 function getCorrectDateFormat(inputDate) {
@@ -17,7 +18,7 @@ function getCorrectDateFormat(inputDate) {
     return(year + '-' + month + '-' + day);
 }
 
-export default class SurveySettings extends React.Component {
+class SurveySettings extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -115,9 +116,10 @@ export default class SurveySettings extends React.Component {
 
 
     render() {
+        const { t } = this.props;
         return (
             (!this.state.loaded)?
-            <div>Loading...</div>:
+            <div>{t('Loading')}</div>:
             <Box>
                 <Box display="flex" alignItems="center" mb={4}>
                     <Box>
@@ -127,7 +129,7 @@ export default class SurveySettings extends React.Component {
                     </Box>
                     <Box mr={2}>
                         <Typography variant="h5" display="inline">
-                            Ustawienia ankiety:
+                            {t('SurveySettings')}
                         </Typography>
                     </Box>
                     <Box>
@@ -141,7 +143,7 @@ export default class SurveySettings extends React.Component {
                     <Box mb={4}>
                         <Button variant="contained" onClick={this.updateButtonClick}>
                             <Typography variant="button">
-                                Aktualizuj ankietę
+                                {t('UpdateSurvey')}
                             </Typography>
                         </Button>
                     </Box>
@@ -154,7 +156,7 @@ export default class SurveySettings extends React.Component {
                                 <MenuItem value={true}>Tak</MenuItem>
                                 <MenuItem value={false}>Nie</MenuItem>
                             </Select>
-                            <FormHelperText>Czy udostępnić ankietę?</FormHelperText>
+                            <FormHelperText>{t('ShareSurvey')}</FormHelperText>
                         </FormControl>
                     </Box>
                     {(this.state.isOpen) ?
@@ -169,3 +171,4 @@ export default class SurveySettings extends React.Component {
         )
     }
 }
+export default withTranslation()(SurveySettings);

@@ -2,9 +2,10 @@ import React from 'react';
 import { Typography, Box } from '@material-ui/core';
 import { CoursesTable } from './tables.js';
 import NewSurvey from './newSurvey.js';
+import { withTranslation } from "react-i18next";
 
 //Strona dodawania ankiet
-export default class AddSurveyPage extends React.Component {
+class AddSurveyPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -49,12 +50,13 @@ export default class AddSurveyPage extends React.Component {
 
 
     render() {
+        const { t } = this.props;
         if (!this.state.courseChosen)
             return (
                 <Box>
                     <Box mb={2}>
                         <Typography variant="h5">
-                            Wybierz kurs do którego chcesz utworzyć ankietę
+                        {t('ChooseCource')}
                         </Typography>
                     </Box>
                     <Box>
@@ -72,3 +74,4 @@ export default class AddSurveyPage extends React.Component {
             )
     }
 }
+export default withTranslation()(AddSurveyPage);

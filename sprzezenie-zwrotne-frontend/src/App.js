@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { CssBaseline, AppBar, Toolbar, Drawer, Button, Typography } from '@material-ui/core';
+import { CssBaseline, AppBar, Toolbar, Drawer, Button, Select, FormControl, MenuItem, Typography, InputLabel } from '@material-ui/core';
 import DrawerList from "./components/drawer-list"
 import { makeStyles } from '@material-ui/core/styles';
 import MainView from './components/mainView';
 import LogoutButton from './components/logout';
+import i18n from "./i18n";
+import { useTranslation } from "react-i18next";
 
 const drawerWidth = 200;
+
 
 const styles = makeStyles((theme) => ({
   div: {
@@ -41,7 +44,11 @@ const styles = makeStyles((theme) => ({
 
 
 
-function App(sth) {
+function App() {
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+  }
+  const {t, i18n} = useTranslation('translations');
   const classStyles = styles();
   const [selectedModule, setSelectedModule] = useState("Main");
   const [userData, setUserData] = useState(
@@ -82,8 +89,15 @@ function App(sth) {
         <AppBar position="fixed" className={classStyles.appBar} >
           <Toolbar>
             <Typography variant="h6" className={classStyles.title}>
-              System ankiet
+              {t('Title')}
             </Typography>
+            <FormControl variant="outlined">
+            <InputLabel id="select-language-label"></InputLabel>
+            <Select labelId="select-language-label" id="select-language" onChange={(event) => changeLanguage(event.target.value)} style={{width: '200px', color: "white"}}>
+                <MenuItem value="pl">polski</MenuItem>
+                <MenuItem value="en">english</MenuItem>
+            </Select>
+            </FormControl>
             <LogoutButton parentCallback={(command) => { if (command === "Logout") setUserData(null) }} />
           </Toolbar>
         </AppBar>
@@ -122,4 +136,13 @@ function App(sth) {
   }
 }
 
+// function ChooseLanguage(e) {
+//   //alert(document.getElementById('select-language').value);
+//   language = e.target.value;
+//   alert(language);
+//   //alert(language);
+//   //document.getElementById('select-language').addEventListener('change', function() {
+//     //console.log('You selected: ', this.value);
+//   //});
+// }
 export default App;

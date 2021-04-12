@@ -2,9 +2,10 @@ import React from 'react';
 import { SurveysTable } from './tables.js';
 import { SurveyComponent } from './questions.js';
 import { Typography, Box } from '@material-ui/core';
+import { withTranslation } from 'react-i18next';
 
 //Strona z ankietami ktore mozna wypelnic
-export default class SurveysPage extends React.Component {
+class SurveysPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -16,7 +17,7 @@ export default class SurveysPage extends React.Component {
 
         this.getAvailableSurveys = this.getAvailableSurveys.bind(this);
         this.getSurveyData = this.getSurveyData.bind(this);
-        this.surveyToGetCallback = this.surveyToGetCallback.bind(this);
+        this.handleSurveyToGetCallback = this.handleSurveyToGetCallback.bind(this);
         this.handleSurveyQuestionsCallback = this.handleSurveyQuestionsCallback.bind(this);
     }
 
@@ -24,7 +25,7 @@ export default class SurveysPage extends React.Component {
         this.getAvailableSurveys();
     }
 
-    surveyToGetCallback = async function(surveyChosen) {
+    handleSurveyToGetCallback = async function(surveyChosen) {
         this.surveyData = surveyChosen;
         await this.setState({surveyToGet: surveyChosen.surveyId});
         this.getSurveyData();
@@ -73,6 +74,7 @@ export default class SurveysPage extends React.Component {
 
 
     render() {
+        const { t } = this.props;
         return (
             <div>
                 {
@@ -81,10 +83,10 @@ export default class SurveysPage extends React.Component {
                             <Box>
                                 <Box mb={3}>
                                     <Typography variant="h4">
-                                        Ankiety, które można wypełnić:
+                                        {t('SurveysToFill')}
                                     </Typography>
                                 </Box>
-                                <SurveysTable data={this.state.availableSurveysData} parentCallback={this.surveyToGetCallback} />
+                                <SurveysTable data={this.state.availableSurveysData} parentCallback={this.handleSurveyToGetCallback} />
                             </Box>
                             : false) :
                         false
@@ -98,3 +100,4 @@ export default class SurveysPage extends React.Component {
         )
     }
 }
+export default withTranslation()(SurveysPage);

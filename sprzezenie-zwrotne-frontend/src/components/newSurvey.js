@@ -6,14 +6,14 @@ import CustomSurveyModule from './customSurvey.js';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
+import { withTranslation } from "react-i18next";
 
 //Koponent w ktorym dodawana jest ankieta
-export default class NewSurvey extends React.Component {
+class NewSurvey extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             dialogOpen: false,
-            dialogText: null,
             fromTemplate: "new",
             surveyTemplatesLoaded: false,
             selectedTemplate: 0,
@@ -60,50 +60,20 @@ export default class NewSurvey extends React.Component {
 
     async handleCustomSurveyData(data){
         if(data.questions.length === 0){
-            this.setState({dialogText: 'Proszę utworzyć pytania', dialogOpen: true});
+            this.setState({dialogOpen: true});
             this.setState({readyToSubmit: false});
             return;
         }
         else{
-            await data.questions.forEach((question, questionIndex) => {
-                if(question.text === null || question.text === ""){
-                    this.setState({dialogText: 'Proszę dodać tekst pytania '+(questionIndex+1)+'', dialogOpen: true});
-                    this.setState({readyToSubmit: false});
-                    return;
-                }
-                else if(question.answers.length === 0){
-                    this.setState({dialogText: 'Proszę utworzyć proponowane odpowiedzi do pytania '+(questionIndex+1)+'', dialogOpen: true});
-                    this.setState({readyToSubmit: false});
-                    return;
-                }
-                else if(question.questionType === null){
-                    this.setState({dialogText: 'Proszę wybrać rodzaj odpowiedzi w pytaniu '+(questionIndex+1)+'', dialogOpen: true});
-                    this.setState({readyToSubmit: false});
-                    return;
-                }
-                else{
-                    question.answers.forEach((answer, answerIndex) => {
-                        if(answer.text === null || answer.text === ""){
-                            this.setState({dialogText: 'Proszę dodać tekst odpowiedzi '+(answerIndex+1)+' pytania '+(questionIndex+1)+'', dialogOpen: true});
-                            this.setState({readyToSubmit: false});
-                            return;
-                        }
-                    })
-                }
-            })
-
-
-            if(this.state.readyToSubmit){
-                if(!data.templateFor.for){
-                    data.templateFor.for = null;
-                }
-                else{
-                    data.templateFor.for = this.props.data.course_id;
-                }
-                this.setState({customSurveyData: data});
-                this.postNewSurvey();
-                this.returnButton();
+            if(!data.templateFor.for){
+                data.templateFor.for = null;
             }
+            else{
+                data.templateFor.for = this.props.data.course_id;
+            }
+            await this.setState({customSurveyData: data});
+            this.postNewSurvey();
+            this.returnButton();
         }
     }
 
@@ -253,7 +223,7 @@ export default class NewSurvey extends React.Component {
 
 
     render() {
-
+        const { t } = this.props;
         return (
             <Box>
                 <Box display="flex" alignItems="center" mb={2}>
@@ -261,7 +231,7 @@ export default class NewSurvey extends React.Component {
                         <ArrowBackIosIcon />
                     </IconButton>
                     <Typography variant="h5" display="inline">
-                        Wybierz ustawienia nowej ankiety
+                        {t('ChooseSettingsToNewSurvey')}
                     </Typography>
                 </Box>
                 <Box mb={3}>
@@ -272,7 +242,7 @@ export default class NewSurvey extends React.Component {
                             ((this.state.isOpen && this.state.openDate !== "" && this.state.closeDate !== "") || !this.state.isOpen)
                             )}>
                                 <Typography variant="button">
-                                    Dodaj ankietę
+                                {t('AddSurvey')}
                                 </Typography>
                             </Button>
                         </Box>
@@ -287,36 +257,36 @@ export default class NewSurvey extends React.Component {
                 <Box mb={2}>
                     <Box mr={2} display="inline">
                         <FormControl variant="outlined" >
-                            <InputLabel id="select-allow-comment-label">Komentarz</InputLabel>
+                            <InputLabel id="select-allow-comment-label">{t('Comment')}</InputLabel>
                             <Select labelId="select-allow-comment-label" id="select-allow-comment" value={this.state.allowComment} label="Komentarz"
                                 onChange={(event) => this.allowCommentChange(event.target.value)}
                                 style={{width: '200px'}}>
-                                <MenuItem value={false}>Nie</MenuItem>
-                                <MenuItem value={true}>Tak</MenuItem>
+                                <MenuItem value={false}>{t('No')}</MenuItem>
+                                <MenuItem value={true}>{t('Yes')}</MenuItem>
                             </Select>
-                            <FormHelperText>Czy pozwolić na komentarz?</FormHelperText>
+                            <FormHelperText>{t('AllowComment')}</FormHelperText>
                         </FormControl>
                     </Box>
                     <Box mr={2} display="inline">
                         <FormControl variant="outlined" >
-                            <InputLabel id="select-is-open-label">Otwarta</InputLabel>
+                            <InputLabel id="select-is-open-label">{t('Open')}</InputLabel>
                             <Select labelId="select-is-open-label" id="select-is-open" value={this.state.isOpen} label="Otwarta"
                                 onChange={(event) => this.isOpenChange(event.target.value)}
                                 style={{width: '200px'}}>
-                                <MenuItem value={true}>Tak</MenuItem>
-                                <MenuItem value={false}>Nie</MenuItem>
+                                <MenuItem value={true}>{t('Yes')}</MenuItem>
+                                <MenuItem value={false}>{t('No')}</MenuItem>
                             </Select>
-                            <FormHelperText>Czy udostępnić ankietę?</FormHelperText>
+                            <FormHelperText>{t('ShareSurvey')}</FormHelperText>
                         </FormControl>
                     </Box>
                     <Box mr={2} display="inline">
                         <FormControl variant="outlined" >
-                            <InputLabel id="select-is-template-label">Szablon</InputLabel>
+                            <InputLabel id="select-is-template-label">{t('Template')}</InputLabel>
                             <Select labelId="select-is-template-label" id="select-is-template" value={this.state.fromTemplate}
                                 onChange={(event) => this.fromTemplateChange(event.target.value)} label="Szablon"
                                 style={{width: '200px'}}>
-                                <MenuItem value={"new"}>Nowa ankieta</MenuItem>
-                                <MenuItem value={"fromTemplate"}>Z szablonu</MenuItem>
+                                <MenuItem value={"new"}>{t('NewSurvey')}</MenuItem>
+                                <MenuItem value={"fromTemplate"}>{t('FromTemplate')}</MenuItem>
                             </Select>
                         </FormControl>
                     </Box>
@@ -324,7 +294,7 @@ export default class NewSurvey extends React.Component {
                         {(this.state.surveyTemplatesLoaded) ?
                             (
                                 <FormControl variant="outlined" >
-                                    <InputLabel id="select-templates-label">Wybierz</InputLabel>
+                                    <InputLabel id="select-templates-label">{t('Choose')}</InputLabel>
                                     <Select labelId="select-templates-label" id="select-templates" value={this.state.selectedTemplate}
                                         onChange={(event) => this.templatesChange(event.target.value)} label="Wybierz szablon"
                                         style={{width: '200px'}}>
@@ -361,16 +331,16 @@ export default class NewSurvey extends React.Component {
                 </Box>
                 <Dialog open={this.state.dialogOpen} onClose={this.dialogClose} >
                     <MuiDialogTitle onClose={this.dialogClose}>
-                        Błąd
+                    {t('Error')}
                     </MuiDialogTitle>
                     <MuiDialogContent dividers>
                         <Typography gutterBottom>
-                            {this.state.dialogText}
+                        {t('PleaseCreateQuestions')}
                         </Typography>
                     </MuiDialogContent>
                     <MuiDialogActions>
                         <Button autoFocus onClick={this.dialogClose} color="primary">
-                            Zamknij
+                        {t('Close')}
                         </Button>
                     </MuiDialogActions>
                 </Dialog>
@@ -378,3 +348,4 @@ export default class NewSurvey extends React.Component {
         )
     }
 }
+export default withTranslation()(NewSurvey);

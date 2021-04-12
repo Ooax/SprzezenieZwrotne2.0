@@ -1,11 +1,10 @@
 import React from 'react';
 import { Button } from '@material-ui/core';
+import { withTranslation } from "react-i18next";
 
-
-export default class LogoutButton extends React.Component {
+class LogoutButton extends React.Component {
     constructor(props) {
         super(props);
-
         this.logout = this.logout.bind(this);
     }
 
@@ -29,10 +28,12 @@ export default class LogoutButton extends React.Component {
     }
 
     render() {
+        const { t } = this.props;
         return(
             <Button color="inherit" onClick={() => {this.logout()}}>
-              Wyloguj
+              {t('Logout')}
             </Button>
         )
     }
 }
+export default withTranslation()(LogoutButton);

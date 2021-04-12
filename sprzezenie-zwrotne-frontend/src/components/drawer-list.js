@@ -1,9 +1,10 @@
 import React from 'react';
 import { List, ListItem, ListItemText, ListItemIcon } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { withTranslation } from "react-i18next";
 
 //Zarzadzanie szuflada
-export default class DrawerList extends React.Component {
+class DrawerList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -28,19 +29,21 @@ export default class DrawerList extends React.Component {
 
 
     renderMainDrawer(){
+        const { t } = this.props;
         return (
             <List>
                 <ListItem button key="drawer_item_survey" onClick = {(event) => { this.onChosen(event, null, "Surveys") }}>
-                    <ListItemText primary="Ankiety" />
+                    <ListItemText primary={t('Surveys')} />
                 </ListItem>
                 <ListItem button key="drawer_item_usosSurvey" onClick = {(event) => { this.onChosen(event, null, "SurveysUSOS") }}>
-                    <ListItemText primary="Ankiety USOS" />
+                    <ListItemText primary={t('USOSSurveys')} />
                 </ListItem>
             </List>
         )
     }
 
     renderSurveysDrawer(){
+        const { t } = this.props;
         return (
             <List>
                 <ListItem button key="drawer_item_back" onClick = {(event) => { this.onChosen(event, null, "Main")}} >
@@ -51,22 +54,22 @@ export default class DrawerList extends React.Component {
                 {
                     (this.props.data.student_status === 2) ?
                         (<ListItem button key="drawer_item_availableSurveys" onClick={(event) => { this.onChosen(event, "GetSurveys", "Surveys") }} >
-                            <ListItemText primary="Dostępne ankiety" />
+                            <ListItemText primary={t('AvailableSurveys')} />
                         </ListItem>) :
                         false
                 }
                 {
-                    (this.props.data.staff_status === 0) ?
+                    (this.props.data.staff_status === 2) ?
                         (<ListItem button key="drawer_item_usos_addSurvey" onClick={(event) => { this.onChosen(event, "AddSurvey", "Surveys") }} >
-                            <ListItemText primary="Dodaj ankietę" />
+                            <ListItemText primary={t('AddSurvey')} />
                         </ListItem>) :
                         false
                 }
                 {
                     //Zmienic na staff_status
-                    (this.props.data.staff_status === 0) ?
+                    (this.props.data.staff_status === 2) ?
                         (<ListItem button key="drawer_item_manageSurveys" onClick={(event) => { this.onChosen(event, "ManageSurveys", "Surveys") }} >
-                            <ListItemText primary="Zarządzaj ankietami" />
+                            <ListItemText primary={t('ManageSurveys')} />
                         </ListItem>) :
                         false
                 }
@@ -75,6 +78,7 @@ export default class DrawerList extends React.Component {
     }
 
     renderSurveysUSOSDrawer(){
+        const { t } = this.props;
         return (
             <List>
                 <ListItem button key="drawer_item_back" onClick = {(event) => { this.onChosen(event, null, "Main")}}>
@@ -85,7 +89,7 @@ export default class DrawerList extends React.Component {
                 {
                     (this.props.data.student_status === 2)?
                     (<ListItem button key="drawer_item_usosAvailableSurveys" onClick = {(event) => { this.onChosen(event, "GetUSOSSurveys", "SurveysUSOS")}}>
-                        <ListItemText primary="Ankiety zajęć" />
+                        <ListItemText primary={t('SubjectSurveys')} />
                     </ListItem>):
                     false
                 }
@@ -102,3 +106,4 @@ export default class DrawerList extends React.Component {
             return this.renderSurveysUSOSDrawer();
     }
 }
+export default withTranslation()(DrawerList);

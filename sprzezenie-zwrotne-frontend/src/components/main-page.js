@@ -1,18 +1,21 @@
 import React from 'react';
+import { withTranslation } from "react-i18next";
 
 
-export default class MainPage extends React.Component {
+class MainPage extends React.Component {
 
     componentDidMount(){
     }
 
 
     render() {
+        const { t } = this.props;
         return (
             <div>
-                <h1>Witamy w systemie ankiet</h1>
-                <h2>Wybierz moduł z szuflady</h2>
+                <h1>{t('Welcome')}</h1>
+                <h2>{t('ChooseModule')}</h2>
             </div>
         )
     }
 }
+export default withTranslation()(MainPage);

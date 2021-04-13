@@ -36,8 +36,10 @@ Po przejściu w przeglądarce internetowej do strony zgodnej z adresem URL aplik
 
 W przypadku uruchamiania aplikacji klienckiej z innymi parametrami konfiguracyjnymi niż domyślne trzeba ustawić URL ścieżki logowania aplikacji serwerowej we właściwości href przycisku w pliku App.js, tak aby umożliwiał on prawidłowe przekierowanie do logowania do aplikacji.
 
-![obraz](https://user-images.githubusercontent.com/56534169/114488851-61422000-9c12-11eb-85de-b57acbe0cb05.png)
+![obraz](https://user-images.githubusercontent.com/56534169/114489081-d01f7900-9c12-11eb-9075-af0062927db2.png)
+
 Na końcu należy ustawić adres URL działającej aplikacji serwerowej w zmiennej proxy w pliku package.json znajdującym się w katalogu sprzezenie-zwrotne-frontend.:
 
-![obraz](https://user-images.githubusercontent.com/56534169/114488892-761eb380-9c12-11eb-893e-79d29b6e0f25.png)
+![obraz](https://user-images.githubusercontent.com/56534169/114489062-c433b700-9c12-11eb-880a-38ece4c2a6b8.png)
+
 

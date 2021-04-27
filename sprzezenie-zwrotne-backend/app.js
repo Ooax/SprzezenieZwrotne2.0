@@ -178,7 +178,13 @@ function isLoggedIn(req, res, next){
 //Tutaj pobrane moga byc podstawowe dane uzytkownika
 app.get('/getUserInfo', function(req, res){
     res.json(req.session.userData);
-})
+});
+
+//Tutaj pobrane moga byc podstawowe dane uzytkownika
+app.get('/isSystemUp', async function(req, res){
+    const isUp = await login.isSystemUp();
+    res.json({status: isUp});
+});
 
 //Modul funkcji ankiet USOS
 app.use("/usosSurveys", isLoggedIn, usosSurveysRouter);

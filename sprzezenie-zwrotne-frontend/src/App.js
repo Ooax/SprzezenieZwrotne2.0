@@ -51,6 +51,7 @@ function App() {
   const {t, i18n} = useTranslation('translations');
   const classStyles = styles();
   const [selectedModule, setSelectedModule] = useState("Main");
+  const [isSystemOnline, setIsSystemOnline] = useState(true);
   const [userData, setUserData] = useState(
     {
       id: null,
@@ -65,6 +66,21 @@ function App() {
 
   //Jednokrotne pobranie danych z sesji uzytkownika, ktore zarazem sprawdza czy sesja byla uwierzytelniona
   React.useEffect(() => {
+
+    async function isSystemUp() {
+      const response = await fetch('/isSystemUp', {
+        method: 'GET',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      });
+      const isOnline = await response.json();
+      if(isOnline.status){
+        setIsSystemOnline(isOnline.status);
+      }
+    }
+
     async function fetchUserData() {
       const response = await fetch('/getUserInfo', {
         method: 'GET',
@@ -78,11 +94,12 @@ function App() {
         setUserData(userInfo);
       }
     }
+    isSystemUp();
     fetchUserData();
   }, [])
 
-  //Strona w 2 wersjach - przed i po zalogowaniu
-  if (userData ? userData.id : false) {
+  //Strona w 3 wersjach - przed i po zalogowaniu + kiedy system usos nie działą
+  if (isSystemOnline?(userData ? userData.id : false):false) {
     return (
       <div className={classStyles.div}>
         <CssBaseline />
@@ -110,7 +127,27 @@ function App() {
         </Drawer>
         <main className={classStyles.main}>
           <Toolbar />
-          <MainView data={selectedModule} />
+          <MainView data={selectedModule} user={userData} />
+        </main>
+      </div>
+    )
+  }
+  else if(!isSystemOnline) {
+    return (
+      <div className={classStyles.div}>
+        <CssBaseline />
+        <AppBar position="fixed" className={classStyles.appBar} >
+          <Toolbar>
+            <Typography variant="h6" className={classStyles.title}>
+              {t('Title')}
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <main className={classStyles.main}>
+          <Toolbar />
+          <Typography variant="h5" className={classStyles.title}>
+              {t('SystemNotOnline')}
+            </Typography>
         </main>
       </div>
     )

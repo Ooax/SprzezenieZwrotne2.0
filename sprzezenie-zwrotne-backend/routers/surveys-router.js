@@ -9,7 +9,7 @@ const mongoInfo = {
 }
 
 router.get('/getCoursesAvailableToSurvey', function(req, res){
-    if(req.session.userData.staff_status == 0){
+    if(req.session.userData.staff_status == 2 || req.session.userData.student_status == 2){
         surveys.getCoursesAvailableToSurvey(req.session.token, req.session.userData)
         .then(function(result){
             res.json(result); 
@@ -24,7 +24,7 @@ router.get('/getCoursesAvailableToSurvey', function(req, res){
 
 router.post('/getSurveyTemplates', function(req, res){
     const data = req.body;
-    if(req.session.userData.staff_status == 0 && data){
+    if((req.session.userData.staff_status == 2 || req.session.userData.student_status == 2) && data){
         surveys.getSurveyTemplates(mongoInfo, data)
         .then(function(result){
             res.json(result); 
@@ -39,7 +39,7 @@ router.post('/getSurveyTemplates', function(req, res){
 
 router.post('/addNewSurvey', function(req, res){
     const data = req.body;
-    if(req.session.userData.staff_status == 0 && data){
+    if((req.session.userData.staff_status == 2 || req.session.userData.student_status == 2) && data){
         surveys.addNewSurvey(mongoInfo, data)
         .then(function(result){
             res.json(result); 
@@ -53,7 +53,7 @@ router.post('/addNewSurvey', function(req, res){
 })
 
 router.get('/getAvailableSurveys', function(req, res){
-    if(req.session.userData.student_status == 2){
+    if(req.session.userData.student_status == 2 || req.session.userData.staff_status == 2){
         surveys.getAvailableSurveys(mongoInfo, req.session.token, req.session.userData)
         .then(function(result){
             res.json(result); 
@@ -68,7 +68,7 @@ router.get('/getAvailableSurveys', function(req, res){
 
 router.post('/getSurveyData', function(req, res){
     const data = req.body;
-    if(req.session.userData.student_status == 2 && data){
+    if((req.session.userData.student_status == 2 || req.session.userData.staff_status == 2) && data){
         surveys.getSurveyData(mongoInfo, data)
         .then(function(result){
             res.json(result); 
@@ -83,7 +83,7 @@ router.post('/getSurveyData', function(req, res){
 
 router.post('/fillOutSurvey', function(req, res){
     const data = req.body;
-    if(req.session.userData.student_status == 2 && data){
+    if((req.session.userData.student_status == 2 || req.session.userData.staff_status == 2) && data){
         surveys.fillOutSurvey(mongoInfo, req.session.userData, data)
         .then(function(result){
             res.json(result); 
@@ -97,7 +97,7 @@ router.post('/fillOutSurvey', function(req, res){
 })
 
 router.get('/getMySurveys', function(req, res){
-    if(req.session.userData.staff_status == 0){
+    if(req.session.userData.staff_status == 2 || req.session.userData.student_status == 2){
         surveys.getMySurveys(mongoInfo, req.session.token, req.session.userData)
         .then(function(result){
             res.json(result); 
@@ -112,7 +112,7 @@ router.get('/getMySurveys', function(req, res){
 
 router.post('/getMySurveyData', function(req, res){
     const data = req.body;
-    if(req.session.userData.staff_status == 0 && data){
+    if((req.session.userData.staff_status == 2 || req.session.userData.student_status == 2) && data){
         surveys.getMySurveyData(mongoInfo, data)
         .then(function(result){
             res.json(result); 
@@ -127,7 +127,7 @@ router.post('/getMySurveyData', function(req, res){
 
 router.post('/updateMySurveyData', function(req, res){
     const data = req.body;
-    if(req.session.userData.staff_status == 0 && data){
+    if((req.session.userData.staff_status == 2 || req.session.userData.student_status == 2) && data){
         surveys.updateMySurveyData(mongoInfo, data)
         .then(function(result){
             res.json(result); 

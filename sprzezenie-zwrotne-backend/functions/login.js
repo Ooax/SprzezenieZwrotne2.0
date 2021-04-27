@@ -117,7 +117,7 @@ const logout = async (token) => {
             headers: oauth.toHeader(oauth.authorize({
                 url: url, method: 'POST'}, token))
         });
-        return(response.body);
+        return (response.body);
     }
     catch(error){
         if(error.response){
@@ -130,11 +130,30 @@ const logout = async (token) => {
     }
 }
 
+const isSystemUp = async () => {
+    url = 'https://usosapps.umk.pl/services/apiref/scopes';
+    try{
+        const response = await got(url);
+        return response.body?true:false;
+    }
+    catch(error){
+        if(error.response){
+            console.log(error.response.body);
+            return false;
+        }
+        else{
+            console.error(error);
+            return false;
+        }
+    }
+}
+
 
 
 
 module.exports = {
     //login: login,
     callback: callback,
-    logout: logout
+    logout: logout,
+    isSystemUp: isSystemUp
 }

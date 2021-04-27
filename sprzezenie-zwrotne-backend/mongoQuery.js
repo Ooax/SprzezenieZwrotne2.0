@@ -16,6 +16,22 @@ const findQuery = async (client, conInfo,collectionName,findObject, options) => 
     return returnObj;
 }
 
+//Query do bazy MongoDB - aggregate
+const aggregateQuery = async (client, conInfo,collectionName,pipeline) => {
+    const db = client.db(conInfo.dbName);
+    const collection = db.collection(collectionName);
+    var returnObj = null;
+
+    await collection.aggregate(pipeline).toArray()
+    .then((res)=>{
+        returnObj = res;
+    })
+    .catch((err) => {
+        console.error(err);
+    });
+    return returnObj;
+}
+
 //Query do bazy MongoDB - wstawianie obiektow - mozna wstawiac wiele
 const insertQuery = async (client, conInfo, collectionName, data) => {
     var returnObject={
@@ -120,6 +136,7 @@ const upsertQuery = async (client, conInfo, collectionName, target, data) => {
 
 module.exports = {
     findQuery: findQuery,
+    aggregateQuery: aggregateQuery,
     insertQuery: insertQuery,
     updateQuery: updateQuery,
     upsertQuery: upsertQuery

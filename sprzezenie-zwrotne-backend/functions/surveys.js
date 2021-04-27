@@ -598,6 +598,42 @@ const updateMySurveyData = async function (mongoInfo, data) {
 };
 
 
+//Pobieranie danych o ankietach z najlepszymi wynikami
+const getMyBestSurveys = async function (mongoInfo, data) {
+    const client = await MongoClient.connect(mongoInfo.url, { useUnifiedTopology: true });
+    var mySurvey = null;
+    await mongoQuery.aggregateQuery(client, mongoInfo, 'course_surveys', { _id: new ObjectId(data._id) })
+        .then(function (result) {
+            mySurvey = result[0];
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+    await mongoQuery.findQuery(client, mongoInfo, 'surveys', { _id: new ObjectId(mySurvey.surveyId) })
+        .then(function (result) {
+            mySurvey.questions = result[0].questions;
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+    mySurvey.surveyAnswers = [];
+    await mongoQuery.findQuery(client, mongoInfo, 'course_surveys_answers', { courseSurveyId: new ObjectId(data._id) })
+        .then(function (result) {
+            if (result) {
+                result.forEach((element) => {
+                    mySurvey.surveyAnswers.push({ answers: element.answers, surveyComment: element.surveyComment,
+                         lecturer: element.courseInfo.lecturer });
+                })
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+    client.close()
+    return mySurvey;
+};
+
+
 module.exports = {
     getCoursesAvailableToSurvey: getCoursesAvailableToSurvey,
     getSurveyTemplates: getSurveyTemplates,

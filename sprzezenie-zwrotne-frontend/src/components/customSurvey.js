@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography, Box, IconButton, InputLabel, MenuItem, FormControl, Select, TextField } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import CloseIcon from '@material-ui/icons/Close';
 import {lightBlue, grey } from '@material-ui/core/colors';
 import { withTranslation } from "react-i18next";
 
@@ -22,6 +23,7 @@ class CustomSurveyModule extends React.Component {
         this.onQuestionTextChange = this.onQuestionTextChange.bind(this);
         this.onQuestionTypeChange = this.onQuestionTypeChange.bind(this);
         this.addQuestion = this.addQuestion.bind(this);
+        this.deleteQuestion = this.deleteQuestion.bind(this);
         this.renderQuestions = this.renderQuestions.bind(this);
         this.renderAnswers = this.renderAnswers.bind(this);
     }
@@ -79,6 +81,12 @@ class CustomSurveyModule extends React.Component {
         this.setState({newSurveyData: surveyData});
     }
 
+    deleteQuestion(questionIndex){
+        var surveyData = this.state.newSurveyData;
+        surveyData.questions.splice(questionIndex, 1);
+        this.setState({newSurveyData: surveyData});
+    }
+
     addAnswer(questionIndex){
         var surveyData = this.state.newSurveyData;
         surveyData.questions[questionIndex].answers.push(
@@ -87,6 +95,13 @@ class CustomSurveyModule extends React.Component {
                 text: null
             }
         )
+        console.log(surveyData.questions);
+        this.setState({newSurveyData: surveyData});
+    }
+
+    deleteAnswer(questionIndex, answerIndex){
+        var surveyData = this.state.newSurveyData;
+        surveyData.questions[questionIndex].answers.splice(answerIndex, 1);
         this.setState({newSurveyData: surveyData});
     }
 
@@ -94,8 +109,13 @@ class CustomSurveyModule extends React.Component {
         const { t } = this.props;
         return this.state.newSurveyData.questions.map(function(question,questionIndex){
             return(
-                <Box mb={2} border={1} borderRadius="borderRadius">
-                    <Box m={2}>
+                <Box mb={2} border={1} borderRadius="borderRadius" key={"question_" + questionIndex}>
+                    <Box style={{float: 'right'}}>
+                        <IconButton aria-label="delete-question" onClick={() => {this.deleteQuestion(questionIndex)}} style={{color: lightBlue[600]}}>
+                            <CloseIcon />
+                        </IconButton>
+                    </Box>
+                    <Box mb={2} mx={2}>
                         <TextField id="survey-question-text" value={this.state.newSurveyData.questions[questionIndex].text} label={"Pytanie " + (questionIndex + 1)}
                             onChange={(event) => this.onQuestionTextChange(event.target.value, questionIndex)} fullWidth />
                     </Box>
@@ -132,7 +152,13 @@ class CustomSurveyModule extends React.Component {
         return this.state.newSurveyData.questions[questionIndex].answers.map(function (answers, answerIndex) {
             return (
                 <TextField id="survey-answer-text" value={this.state.newSurveyData.questions[questionIndex].answers[answerIndex].text} label={"Odpowiedź " + (answerIndex + 1)}
-                            onChange={(event) => this.onAnswerTextChange(event.target.value, questionIndex, answerIndex)} fullWidth />
+                            onChange={(event) => this.onAnswerTextChange(event.target.value, questionIndex, answerIndex)} fullWidth 
+                            InputProps={{endAdornment:
+                            <IconButton aria-label="delete-answer" onClick={() => {this.deleteAnswer(questionIndex, answerIndex)}} style={{color: lightBlue[600]}}>
+                                <CloseIcon />
+                            </IconButton>
+                        }}>
+                </TextField>
             )
         }, this)
     }

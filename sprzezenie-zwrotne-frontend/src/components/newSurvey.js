@@ -14,6 +14,7 @@ class NewSurvey extends React.Component {
         super(props);
         this.state = {
             dialogOpen: false,
+            dialogText: null,
             fromTemplate: "new",
             surveyTemplatesLoaded: false,
             selectedTemplate: 0,
@@ -32,6 +33,7 @@ class NewSurvey extends React.Component {
         
         this.returnButton = this.returnButton.bind(this);
         this.dialogClose = this.dialogClose.bind(this);
+        this.dialogOpen = this.dialogOpen.bind(this);
         this.getSurveyTemplates = this.getSurveyTemplates.bind(this);
         this.fromTemplateChange = this.fromTemplateChange.bind(this);
         this.renderTemplatesSelect = this.renderTemplatesSelect.bind(this);
@@ -55,16 +57,42 @@ class NewSurvey extends React.Component {
     }
 
     dialogClose(){
-        this.setState({dialogOpen: false})
+        this.setState({dialogOpen: false});
+    }
+
+    dialogOpen(text){
+        this.setState({dialogText: text});
+        this.setState({dialogOpen: true});
     }
 
     async handleCustomSurveyData(data){
+        const { t } = this.props;
         if(data.questions.length === 0){
-            this.setState({dialogOpen: true});
+            this.dialogOpen(t('PleaseCreateQuestions'));
             this.setState({readyToSubmit: false});
             return;
         }
         else{
+            for(var i = 0; i < data.questions.length; i++){
+                console.log(data.questions[i].text)
+                if(data.questions[i].text?(data.questions[i].text.match(/^ *$/) !== null || data.questions[i].text === ""):true){
+                    this.dialogOpen(t('PleaseAddQuestionText') + " " + (i + 1));
+                    this.setState({readyToSubmit: false});
+                    return;
+                }
+                else if(data.questions[i].answers.length < 1){
+                    this.dialogOpen(t('PleaseCreateAnswers'));
+                    this.setState({readyToSubmit: false});
+                    return;
+                }
+                for(var j = 0; j < data.questions[i].answers.length; j++){
+                    if(data.questions[i].answers[j].text?(data.questions[i].answers[j].text.match(/^ *$/) !== null || data.questions[i].answers[j].text === ""):true){
+                        this.dialogOpen(t('PleaseAddAnswerText') + " " + (j + 1));
+                        this.setState({readyToSubmit: false});
+                        return; 
+                    }
+                }
+            }
             if(!data.templateFor.for){
                 data.templateFor.for = null;
             }
@@ -78,7 +106,7 @@ class NewSurvey extends React.Component {
     }
 
     //Jesli dodawana jest "nowa ankieta" to zmienia stan readyToSubmit, ktory wywoluje przekazanie danych z modulu nowych pytan ankiety (customSurvey.js),
-    // a nastepnie po otrzymanie danych wywoluje przeslanie ich do api
+    // a nastepnie po otrzymaniu danych wywoluje przeslanie ich do api
     //Jesli dodawana jest ankieta z szablonu, to od razu wysyla dane
     handleSubmit = async function(event){
         event.preventDefault();
@@ -335,7 +363,7 @@ class NewSurvey extends React.Component {
                     </MuiDialogTitle>
                     <MuiDialogContent dividers>
                         <Typography gutterBottom>
-                        {t('PleaseCreateQuestions')}
+                        {this.state.dialogText}
                         </Typography>
                     </MuiDialogContent>
                     <MuiDialogActions>

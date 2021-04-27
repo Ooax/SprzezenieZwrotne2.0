@@ -56,7 +56,7 @@ class AddSurveyPage extends React.Component {
                 <Box>
                     <Box mb={2}>
                         <Typography variant="h5">
-                        {t('ChooseCource')}
+                        {t('ChooseCourse')}
                         </Typography>
                     </Box>
                     <Box>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Box, IconButton, InputLabel, MenuItem, FormControl, Select, TextField, Button, FormHelperText, Dialog } from '@material-ui/core';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import { TemplateSurvey } from './questions.js';
+import TemplateSurvey from './questions/surveyTemplateQuestion.js';
 import CustomSurveyModule from './customSurvey.js';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';

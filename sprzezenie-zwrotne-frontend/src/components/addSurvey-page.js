@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography, Box } from '@material-ui/core';
-import { CoursesTable } from './tables.js';
+import CoursesTable from './tables/coursesTable.js';
 import NewSurvey from './newSurvey.js';
 import { withTranslation } from "react-i18next";
 

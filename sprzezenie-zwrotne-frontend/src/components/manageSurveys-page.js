@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography, Box } from '@material-ui/core';
-import { StaffSurveysTable } from './tables.js';
+import StaffSurveysTable from './tables/staffSurveyTable.js';
 import SurveyStatistics from './surveyStatistics.js';
 import SurveySettings from './surveySettings.js';
 import { withTranslation } from "react-i18next";

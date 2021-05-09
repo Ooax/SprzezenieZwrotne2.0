@@ -1,6 +1,6 @@
 import React from 'react';
-import { SurveysUSOSTable } from "./tables";
-import { SurveyUSOSComponent } from "./questions";
+import SurveysUSOSTable from "./tables/surveyUSOSTable.js";
+import SurveyUSOSComponent from "./questions/surveyUSOSQuestion.js";
 
 //Strona z ankietami usos ktore mozna wypelnic
 export default class SurveysUSOSPage extends React.Component {

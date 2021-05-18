@@ -30,6 +30,26 @@
   - Frontend link - adres URL działającej aplikacji frontend
 2. Konfiguracja "proxy" w pliku package.json w katalogu sprzezenie-zwrotne-frontend: adres URL do działającej aplikacji backend
 
+#### Test aplikacji backend
+Aby przetestować podstawowe funkcje aplikacji backend, w terminalu (w katalogu sprzezenie-zwrotne-backend) wywołać komendę:
+```
+npm test
+```
+
+#### Uruchamianie
+1. Aplikacja backend:
+  - W terminalu (w katalogu sprzezenie-zwrotne-backend) wywołać komendę:
+  ```
+  node app.js
+  ```
+2. Aplikacja frontend:
+  - W terminalu(w katalogu sprzezenie-zwrotne-frontend) wywołać komendę:
+  ```
+  npm start
+  ```
+  
+
+
 #### Koniec
 Po przejściu w przeglądarce internetowej do strony zgodnej z adresem URL aplikacji klienckiej, użytkownik powinien zobaczyć interfejs logowania.
 

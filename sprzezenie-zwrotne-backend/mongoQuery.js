@@ -4,7 +4,7 @@ const MongoClient = require('mongodb').MongoClient;
 const findQuery = async (client, conInfo,collectionName,findObject, options) => {
     const db = client.db(conInfo.dbName);
     const collection = db.collection(collectionName);
-    var returnObj = null;
+    let returnObj = null;
 
     await collection.find(findObject, options).toArray()
     .then((res)=>{
@@ -20,7 +20,7 @@ const findQuery = async (client, conInfo,collectionName,findObject, options) => 
 const aggregateQuery = async (client, conInfo,collectionName,pipeline) => {
     const db = client.db(conInfo.dbName);
     const collection = db.collection(collectionName);
-    var returnObj = null;
+    let returnObj = null;
 
     await collection.aggregate(pipeline).toArray()
     .then((res)=>{
@@ -34,7 +34,7 @@ const aggregateQuery = async (client, conInfo,collectionName,pipeline) => {
 
 //Query do bazy MongoDB - wstawianie obiektow - mozna wstawiac wiele
 const insertQuery = async (client, conInfo, collectionName, data) => {
-    var returnObject={
+    let returnObject={
         inserted: null,
         message: null
     }
@@ -81,7 +81,7 @@ const insertQuery = async (client, conInfo, collectionName, data) => {
 
 //Query do bazy MongoDB - aktualizacja obiektow
 const updateQuery = async (client, conInfo, collectionName, target, data) => {
-    var returnObject={
+    let returnObject={
         message: null
     }
     const db = client.db(conInfo.dbName);
@@ -108,7 +108,7 @@ const updateQuery = async (client, conInfo, collectionName, target, data) => {
 
 //Query do bazy MongoDB - aktualizacja obiektu lub wstawianie jesli jeszcze nie istnieje w bazie
 const upsertQuery = async (client, conInfo, collectionName, target, data) => {
-    var returnObject={
+    let returnObject={
         message: null
     }
     const db = client.db(conInfo.dbName);

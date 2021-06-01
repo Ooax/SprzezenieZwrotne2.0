@@ -2,6 +2,7 @@ import React from 'react';
 import { Typography, Box, IconButton, InputLabel, MenuItem, FormControl, Select, TextField } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
+import EqualizerIcon from '@material-ui/icons/Equalizer';
 import {lightBlue, grey } from '@material-ui/core/colors';
 import { withTranslation } from "react-i18next";
 
@@ -26,6 +27,7 @@ class CustomSurveyModule extends React.Component {
         this.deleteQuestion = this.deleteQuestion.bind(this);
         this.renderQuestions = this.renderQuestions.bind(this);
         this.renderAnswers = this.renderAnswers.bind(this);
+        this.gradeQuestion = this.gradeQuestion.bind(this);
     }
 
     componentDidUpdate(prevProps){
@@ -40,41 +42,43 @@ class CustomSurveyModule extends React.Component {
     }
 
     onIsTemplateChange(value){
-        var surveyData = this.state.newSurveyData;
+        let surveyData = this.state.newSurveyData;
         surveyData.isTemplate = value;
         this.setState({newSurveyData: surveyData});
     }
 
     onIsTemplateForCurrentCourseChange(value){
-        var surveyData = this.state.newSurveyData;
+        let surveyData = this.state.newSurveyData;
         surveyData.templateFor.for = value;
         this.setState({newSurveyData: surveyData});
     }
 
     onQuestionTextChange(value, index){
-        var surveyData = this.state.newSurveyData;
+        let surveyData = this.state.newSurveyData;
         surveyData.questions[index].text = value;
         this.setState({newSurveyData: surveyData});
     }
 
     onQuestionTypeChange(value, index){
-        var surveyData = this.state.newSurveyData;
+        let surveyData = this.state.newSurveyData;
         surveyData.questions[index].questionType = value;
         this.setState({newSurveyData: surveyData});
     }
 
     onAnswerTextChange(value, questionIndex, index){
-        var surveyData = this.state.newSurveyData;
+        let surveyData = this.state.newSurveyData;
         surveyData.questions[questionIndex].answers[index].text = value;
         this.setState({newSurveyData: surveyData});
     }
 
     addQuestion(){
-        var surveyData = this.state.newSurveyData;
+        let surveyData = this.state.newSurveyData;
         surveyData.questions.push(
             {
                 questionType: null,
                 text: null,
+                graded: false,
+                maxGrade: 0,
                 answers: []
             }
         )
@@ -82,26 +86,57 @@ class CustomSurveyModule extends React.Component {
     }
 
     deleteQuestion(questionIndex){
-        var surveyData = this.state.newSurveyData;
+        let surveyData = this.state.newSurveyData;
         surveyData.questions.splice(questionIndex, 1);
         this.setState({newSurveyData: surveyData});
     }
 
     addAnswer(questionIndex){
-        var surveyData = this.state.newSurveyData;
+        let surveyData = this.state.newSurveyData;
         surveyData.questions[questionIndex].answers.push(
             {
                 id: surveyData.questions[questionIndex].answers.length.toString(),
-                text: null
+                text: null,
+                grade: 0
             }
         )
+        if(surveyData.questions[questionIndex].graded){
+            for(let j = 0; j < surveyData.questions[questionIndex].answers.length-1; j++){
+                surveyData.questions[questionIndex].answers[j].grade++;
+            }
+            surveyData.questions[questionIndex].maxGrade++;
+        }
         console.log(surveyData.questions);
         this.setState({newSurveyData: surveyData});
     }
 
     deleteAnswer(questionIndex, answerIndex){
-        var surveyData = this.state.newSurveyData;
+        let surveyData = this.state.newSurveyData;
         surveyData.questions[questionIndex].answers.splice(answerIndex, 1);
+        if(surveyData.questions[questionIndex].graded){
+            for(let j = 0; j < answerIndex; j++){
+                surveyData.questions[questionIndex].answers[j].grade--;
+            }
+            surveyData.questions[questionIndex].maxGrade--;
+        }
+        this.setState({newSurveyData: surveyData});
+    }
+
+    gradeQuestion(questionIndex){
+        let surveyData = this.state.newSurveyData;
+        if(!surveyData.questions[questionIndex].graded){
+            surveyData.questions[questionIndex].graded = true;
+            surveyData.questions[questionIndex].maxGrade = surveyData.questions[questionIndex].answers.length;
+            for(let i = surveyData.questions[questionIndex].answers.length - 1, j = 0; i >= 0; i--, j++){
+                surveyData.questions[questionIndex].answers[j].grade = i;
+            }
+        }
+        else{
+            surveyData.questions[questionIndex].graded = false;
+            for(let j = 0; j < surveyData.questions[questionIndex].answers.length; j++){
+                surveyData.questions[questionIndex].answers[j].grade = 0;
+            }
+        }
         this.setState({newSurveyData: surveyData});
     }
 
@@ -111,6 +146,9 @@ class CustomSurveyModule extends React.Component {
             return(
                 <Box mb={2} border={1} borderRadius="borderRadius" key={"question_" + questionIndex}>
                     <Box style={{float: 'right'}}>
+                        <IconButton aria-label="grade-question" onClick={() => {this.gradeQuestion(questionIndex)}} style={{color: lightBlue[600]}}>
+                            <EqualizerIcon />
+                        </IconButton>
                         <IconButton aria-label="delete-question" onClick={() => {this.deleteQuestion(questionIndex)}} style={{color: lightBlue[600]}}>
                             <CloseIcon />
                         </IconButton>
@@ -131,9 +169,19 @@ class CustomSurveyModule extends React.Component {
                         </FormControl>
                     </Box>
                     <Box m={2}>
-                        <Typography variant="h6">
-                        {t('Answers')}
-                        </Typography>
+                            <Typography variant="h6" style={{width: '90%', display: 'inline-block', 'margin-right': '10px'}}>
+                            {t('Answers')}
+                            </Typography>
+                        {
+                        (this.state.newSurveyData.questions[questionIndex].graded)?
+                        (
+                                <Typography variant="h6" style={{width: '8%', display: 'inline-block'}}>
+                                    {t('Grades')}
+                                </Typography>
+                        )
+                        :
+                        false
+                    }
                     </Box>
                     <Box m={2} >
                         {this.renderAnswers(questionIndex)}
@@ -151,14 +199,27 @@ class CustomSurveyModule extends React.Component {
     renderAnswers(questionIndex) {
         return this.state.newSurveyData.questions[questionIndex].answers.map(function (answers, answerIndex) {
             return (
-                <TextField id="survey-answer-text" value={this.state.newSurveyData.questions[questionIndex].answers[answerIndex].text} label={"Odpowiedź " + (answerIndex + 1)}
-                            onChange={(event) => this.onAnswerTextChange(event.target.value, questionIndex, answerIndex)} fullWidth 
-                            InputProps={{endAdornment:
-                            <IconButton aria-label="delete-answer" onClick={() => {this.deleteAnswer(questionIndex, answerIndex)}} style={{color: lightBlue[600]}}>
-                                <CloseIcon />
-                            </IconButton>
-                        }}>
-                </TextField>
+                <Box>
+                    <TextField id="survey-answer-text" value={this.state.newSurveyData.questions[questionIndex].answers[answerIndex].text} label={"Odpowiedź " + (answerIndex + 1)}
+                                onChange={(event) => this.onAnswerTextChange(event.target.value, questionIndex, answerIndex)} style={{width: '90%', 'margin-right': '10px'}} 
+                                InputProps={{endAdornment:
+                                <IconButton aria-label="delete-answer" onClick={() => {this.deleteAnswer(questionIndex, answerIndex)}} style={{color: lightBlue[600]}}>
+                                    <CloseIcon />
+                                </IconButton>
+                            }}>
+                    </TextField>
+                    {
+                        (this.state.newSurveyData.questions[questionIndex].graded)?
+                        (
+                            <Select labelId="select-answer-grade" id={"select-answer-grade"+answerIndex} value={this.state.newSurveyData.questions[questionIndex].answers[answerIndex].grade} label="Ocena"
+                            style={{width: '8%', height: '64px'}} disabled>
+                                <MenuItem value={this.state.newSurveyData.questions[questionIndex].answers[answerIndex].grade}>{this.state.newSurveyData.questions[questionIndex].answers[answerIndex].grade}</MenuItem>
+                            </Select>
+                        )
+                        :
+                        false
+                    }
+                </Box>
             )
         }, this)
     }
@@ -200,7 +261,7 @@ class CustomSurveyModule extends React.Component {
                     }
                     <Box mt={2}>
                         <Typography variant="h5">
-                        {t('Questions')}
+                        {t('Questions')+": "}
                         </Typography>
                     </Box>
                 </Box>

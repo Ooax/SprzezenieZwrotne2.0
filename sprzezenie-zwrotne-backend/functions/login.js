@@ -86,16 +86,16 @@ const callback = async (token, verifier, userdata) => {
     }
 
     url = 'https://usosapps.umk.pl/services/terms/search'
-    var today = new Date().toISOString().slice(0, 10);
+    const today = new Date().toISOString().slice(0, 10);
     try{
-        var returnObject = await got(url, {
+        const returnObject = await got(url, {
             headers: oauth.toHeader(oauth.authorize({url: url, method: 'POST'}, token)),
             searchParams:{
                 min_finish_date: today,
                 max_start_date: today
             }
         });
-        var terms = JSON.parse(returnObject.body);
+        let terms = JSON.parse(returnObject.body);
         terms.shift();
         userdata.term = terms[0].id;
     }

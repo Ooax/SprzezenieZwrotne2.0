@@ -153,6 +153,16 @@ router.post('/getCourseDetails', function (req, res){
                 })
         }
     }
+})
+router.get('/getMyBestSurveys', function(req, res){
+    if(req.session.userData.staff_status == 2 || req.session.userData.student_status == 2){
+        surveys.getMyBestSurveys(mongoInfo, req.session.token, req.session.userData)
+        .then(function(result){
+            res.json(result); 
+        }).catch(function(err){
+            console.error(err);
+        })
+    }
     else{
         res.json({message: "No permission to access resources"})
     }

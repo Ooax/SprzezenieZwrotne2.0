@@ -6,10 +6,10 @@ import i18n from '../i18n';
 
 //Komponent zarzadzania ustawieniami ankiet
 function getCorrectDateFormat(inputDate) {
-    var date = new Date(inputDate);
-    var year = date.getFullYear();
-    var month = date.getMonth() + 1;
-    var day = date.getDate();
+    let date = new Date(inputDate);
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
     if (day < 10) {
         day = '0' + day;
     }

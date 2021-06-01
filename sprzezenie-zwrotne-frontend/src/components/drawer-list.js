@@ -56,14 +56,14 @@ class DrawerList extends React.Component {
                     </ListItemIcon>
                 </ListItem>
                 {
-                    (this.props.data.student_status === 2 || this.props.data.staff_status === 2) ?
+                    (this.props.data.student_status === 2) ?
                         (<ListItem button key="drawer_item_availableSurveys" onClick={(event) => { this.onChosen(event, "GetSurveys", "Surveys") }} >
                             <ListItemText primary={t('AvailableSurveys')} />
                         </ListItem>) :
                         false
                 }
                 {
-                    (this.props.data.staff_status === 2 || this.props.data.student_status === 2) ?
+                    (this.props.data.staff_status === 2) ?
                         (<ListItem button key="drawer_item_usos_addSurvey" onClick={(event) => { this.onChosen(event, "AddSurvey", "Surveys") }} >
                             <ListItemText primary={t('AddSurvey')} />
                         </ListItem>) :
@@ -71,7 +71,7 @@ class DrawerList extends React.Component {
                 }
                 {
                     //Zmienic na staff_status
-                    (this.props.data.staff_status === 2 || this.props.data.student_status === 2) ?
+                    (this.props.data.staff_status === 2) ?
                         (<ListItem button key="drawer_item_manageSurveys" onClick={(event) => { this.onChosen(event, "ManageSurveys", "Surveys") }} >
                             <ListItemText primary={t('ManageSurveys')} />
                         </ListItem>) :

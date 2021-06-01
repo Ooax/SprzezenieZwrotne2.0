@@ -22,7 +22,7 @@ class MainPage extends React.Component {
                     <h2>{t('ChooseModule')}</h2>
                 </Box>
                 {
-                    (this.props.user.staff_status === 2 || this.props.user.student_status === 2) ?
+                    (this.props.user.staff_status === 2) ?
                     (
                     <BestStatistics>
 

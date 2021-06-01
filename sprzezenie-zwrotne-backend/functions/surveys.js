@@ -7,56 +7,8 @@ const ObjectId = require('mongodb').ObjectId;
 
 //Pobieranie danych o zajeciach, ktore sie prowadzilo i do ktorych mozna utworzyc ankiete
 const getCoursesAvailableToSurvey = async function (token, userdata) {
-    // //Część testowania
-    let url = 'https://usosapps.umk.pl/services/courses/user'
-    const oauth = OAuth({
-        consumer: {
-            key: process.env.OAUTH_CONSUMER_KEY,
-            secret: process.env.OAUTH_CONSUMER_SECRET
-        },
-        signature_method: 'PLAINTEXT',
-    });
-    let returnObject = null;
-    returnObject = await got(url, {
-        headers: oauth.toHeader(oauth.authorize({ url: url, method: 'POST' }, token)),
-        searchParams: {
-            fields: "course_editions",
-        }
-    })
-        .catch(function (error) {
-            if (error.response) {
-                console.log(error.response.body);
-                return { message: error.response.body };
-            }
-            else {
-                console.error(error);
-            }
-        })
-    const data = JSON.parse(returnObject.body);
-    let currentCourses = null;
-    const wholeYearTerm = userdata.term.slice(0, -1);
-    if (data.course_editions[wholeYearTerm])
-        currentCourses = data.course_editions[userdata.term].concat(data.course_editions[wholeYearTerm]);
-    else
-        currentCourses = data.course_editions[userdata.term];
-    currentCourseUnitsIds = [];
-    
-    if (currentCourses.length > 0) {
-        currentCourses.forEach(course => {
-            if (course.user_groups) {
-                if (course.user_groups.length > 0) {
-                    course.user_groups.forEach(userGroup => {
-                        currentCourseUnitsIds.push(userGroup.course_unit_id);
-                    })
-                }
-            }
-
-        })
-    }
-///////////////
-
-    //Część faktyczna
-    // let url = 'https://usosapps.umk.pl/services/users/user';
+    // // //Część testowania
+    // let url = 'https://usosapps.umk.pl/services/courses/user'
     // const oauth = OAuth({
     //     consumer: {
     //         key: process.env.OAUTH_CONSUMER_KEY,
@@ -68,7 +20,7 @@ const getCoursesAvailableToSurvey = async function (token, userdata) {
     // returnObject = await got(url, {
     //     headers: oauth.toHeader(oauth.authorize({ url: url, method: 'POST' }, token)),
     //     searchParams: {
-    //         fields: "course_editions_conducted",
+    //         fields: "course_editions",
     //     }
     // })
     //     .catch(function (error) {
@@ -79,44 +31,92 @@ const getCoursesAvailableToSurvey = async function (token, userdata) {
     //         else {
     //             console.error(error);
     //         }
-    //     });
-    // let data = JSON.parse(returnObject.body);
-    // data = data.course_editions_conducted;
-    // console.log(data);
+    //     })
+    // const data = JSON.parse(returnObject.body);
+    // let currentCourses = null;
     // const wholeYearTerm = userdata.term.slice(0, -1);
-    // // data = data.filter(course => (course.term.id == userdata.term) || (course.term.id == wholeYearTerm));
-    // const currentCourseEditions = [];
-    // data.forEach(courseEdition => {
-    //     currentCourseEditions.push({courseId: courseEdition.course.id, termId: courseEdition.term.id});
-    // });
-
-    // const currentCourseUnitsIds = [];
-    // currentCourseEditions.forEach(async function (currentCourseEdition) {
-    //     url = 'https://usosapps.umk.pl/services/courses/course_edition';
-    //     returnObject = null;
-    //     returnObject = await got(url, {
-    //         headers: oauth.toHeader(oauth.authorize({ url: url, method: 'POST' }, token)),
-    //         searchParams: {
-    //             course_id: currentCourseEdition.courseId,
-    //             term_id: currentCourseEdition.termId,
-    //             fields: "course_id|course_name|term_id|user_groups|course_units_ids",
+    // if (data.course_editions[wholeYearTerm])
+    //     currentCourses = data.course_editions[userdata.term].concat(data.course_editions[wholeYearTerm]);
+    // else
+    //     currentCourses = data.course_editions[userdata.term];
+    // currentCourseUnitsIds = [];
+    
+    // if (currentCourses.length > 0) {
+    //     currentCourses.forEach(course => {
+    //         if (course.user_groups) {
+    //             if (course.user_groups.length > 0) {
+    //                 course.user_groups.forEach(userGroup => {
+    //                     currentCourseUnitsIds.push(userGroup.course_unit_id);
+    //                 })
+    //             }
     //         }
+
     //     })
-    //         .catch(function (error) {
-    //             if (error.response) {
-    //                 console.log(error.response.body);
-    //                 return { message: error.response.body };
-    //             }
-    //             else {
-    //                 console.error(error);
-    //             }
-    //         });
-    //     let courseData = JSON.parse(returnObject.body);
-    //     courseData.course_units_ids.forEach(cui => {
-    //         currentCourseUnitsIds.push(cui);
-    //     })
+    // }
+///////////////
+
+    //Część faktyczna
+    let url = 'https://usosapps.umk.pl/services/users/user';
+    const oauth = OAuth({
+        consumer: {
+            key: process.env.OAUTH_CONSUMER_KEY,
+            secret: process.env.OAUTH_CONSUMER_SECRET
+        },
+        signature_method: 'PLAINTEXT',
+    });
+    let returnObject = null;
+    returnObject = await got(url, {
+        headers: oauth.toHeader(oauth.authorize({ url: url, method: 'POST' }, token)),
+        searchParams: {
+            fields: "course_editions_conducted",
+        }
+    })
+        .catch(function (error) {
+            if (error.response) {
+                console.log(error.response.body);
+                return { message: error.response.body };
+            }
+            else {
+                console.error(error);
+            }
+        });
+    let data = JSON.parse(returnObject.body);
+    data = data.course_editions_conducted;
+    console.log(data);
+    const wholeYearTerm = userdata.term.slice(0, -1);
+    // data = data.filter(course => (course.term.id == userdata.term) || (course.term.id == wholeYearTerm));
+    const currentCourseEditions = [];
+    data.forEach(courseEdition => {
+        currentCourseEditions.push({courseId: courseEdition.course.id, termId: courseEdition.term.id});
+    });
+
+    const currentCourseUnitsIds = [];
+    currentCourseEditions.forEach(async function (currentCourseEdition) {
+        url = 'https://usosapps.umk.pl/services/courses/course_edition';
+        returnObject = null;
+        returnObject = await got(url, {
+            headers: oauth.toHeader(oauth.authorize({ url: url, method: 'POST' }, token)),
+            searchParams: {
+                course_id: currentCourseEdition.courseId,
+                term_id: currentCourseEdition.termId,
+                fields: "course_id|course_name|term_id|user_groups|course_units_ids",
+            }
+        })
+            .catch(function (error) {
+                if (error.response) {
+                    console.log(error.response.body);
+                    return { message: error.response.body };
+                }
+                else {
+                    console.error(error);
+                }
+            });
+        let courseData = JSON.parse(returnObject.body);
+        courseData.course_units_ids.forEach(cui => {
+            currentCourseUnitsIds.push(cui);
+        })
         
-    // });
+    });
 /////////////
 
 
@@ -423,117 +423,117 @@ const fillOutSurvey = async function (mongoInfo, userdata, data) {
 
 //Ankiety ktore stworzono - dla pracownika
 const getMySurveys = async function (mongoInfo, token, userdata) {
-// //Część testowania
-let url = 'https://usosapps.umk.pl/services/courses/user'
-const oauth = OAuth({
-    consumer: {
-        key: process.env.OAUTH_CONSUMER_KEY,
-        secret: process.env.OAUTH_CONSUMER_SECRET
-    },
-    signature_method: 'PLAINTEXT',
-});
-let returnObject = null;
-returnObject = await got(url, {
-    headers: oauth.toHeader(oauth.authorize({ url: url, method: 'POST' }, token)),
-    searchParams: {
-        fields: "course_editions",
-    }
-})
-    .catch(function (error) {
-        if (error.response) {
-            console.log(error.response.body);
-            return { message: error.response.body };
-        }
-        else {
-            console.error(error);
-        }
-    })
-const data = JSON.parse(returnObject.body);
-let currentCourses = null;
-const wholeYearTerm = userdata.term.slice(0, -1);
-if (data.course_editions[wholeYearTerm])
-    currentCourses = data.course_editions[userdata.term].concat(data.course_editions[wholeYearTerm]);
-else
-    currentCourses = data.course_editions[userdata.term];
-currentCourseUnitsIds = [];
+// // //Część testowania
+// let url = 'https://usosapps.umk.pl/services/courses/user'
+// const oauth = OAuth({
+//     consumer: {
+//         key: process.env.OAUTH_CONSUMER_KEY,
+//         secret: process.env.OAUTH_CONSUMER_SECRET
+//     },
+//     signature_method: 'PLAINTEXT',
+// });
+// let returnObject = null;
+// returnObject = await got(url, {
+//     headers: oauth.toHeader(oauth.authorize({ url: url, method: 'POST' }, token)),
+//     searchParams: {
+//         fields: "course_editions",
+//     }
+// })
+//     .catch(function (error) {
+//         if (error.response) {
+//             console.log(error.response.body);
+//             return { message: error.response.body };
+//         }
+//         else {
+//             console.error(error);
+//         }
+//     })
+// const data = JSON.parse(returnObject.body);
+// let currentCourses = null;
+// const wholeYearTerm = userdata.term.slice(0, -1);
+// if (data.course_editions[wholeYearTerm])
+//     currentCourses = data.course_editions[userdata.term].concat(data.course_editions[wholeYearTerm]);
+// else
+//     currentCourses = data.course_editions[userdata.term];
+// currentCourseUnitsIds = [];
 
-if (currentCourses.length > 0) {
-    currentCourses.forEach(course => {
-        if (course.user_groups) {
-            if (course.user_groups.length > 0) {
-                course.user_groups.forEach(userGroup => {
-                    currentCourseUnitsIds.push(userGroup.course_unit_id);
-                })
-            }
-        }
+// if (currentCourses.length > 0) {
+//     currentCourses.forEach(course => {
+//         if (course.user_groups) {
+//             if (course.user_groups.length > 0) {
+//                 course.user_groups.forEach(userGroup => {
+//                     currentCourseUnitsIds.push(userGroup.course_unit_id);
+//                 })
+//             }
+//         }
 
-    })
-}
+//     })
+// }
 //////////////
 
 //Część faktyczna
-    // let url = 'https://usosapps.umk.pl/services/users/user';
-    // const oauth = OAuth({
-    //     consumer: {
-    //         key: process.env.OAUTH_CONSUMER_KEY,
-    //         secret: process.env.OAUTH_CONSUMER_SECRET
-    //     },
-    //     signature_method: 'PLAINTEXT',
-    // });
-    // let returnObject = null;
-    // returnObject = await got(url, {
-    //     headers: oauth.toHeader(oauth.authorize({ url: url, method: 'POST' }, token)),
-    //     searchParams: {
-    //         fields: "course_editions_conducted",
-    //     }
-    // })
-    //     .catch(function (error) {
-    //         if (error.response) {
-    //             console.log(error.response.body);
-    //             return { message: error.response.body };
-    //         }
-    //         else {
-    //             console.error(error);
-    //         }
-    //     });
-    // let data = JSON.parse(returnObject.body);
-    // data = data.course_editions_conducted;
-    // console.log(data);
-    // let currentCourses = null;
-    // const wholeYearTerm = userdata.term.slice(0, -1);
-    // // data = data.filter(course => (course.term.id == userdata.term) || (course.term.id == wholeYearTerm));
-    // const currentCourseEditions = [];
-    // data.forEach(courseEdition => {
-    //     currentCourseEditions.push({courseId: courseEdition.course.id, termId: courseEdition.term.id});
-    // });
+    let url = 'https://usosapps.umk.pl/services/users/user';
+    const oauth = OAuth({
+        consumer: {
+            key: process.env.OAUTH_CONSUMER_KEY,
+            secret: process.env.OAUTH_CONSUMER_SECRET
+        },
+        signature_method: 'PLAINTEXT',
+    });
+    let returnObject = null;
+    returnObject = await got(url, {
+        headers: oauth.toHeader(oauth.authorize({ url: url, method: 'POST' }, token)),
+        searchParams: {
+            fields: "course_editions_conducted",
+        }
+    })
+        .catch(function (error) {
+            if (error.response) {
+                console.log(error.response.body);
+                return { message: error.response.body };
+            }
+            else {
+                console.error(error);
+            }
+        });
+    let data = JSON.parse(returnObject.body);
+    data = data.course_editions_conducted;
+    console.log(data);
+    let currentCourses = null;
+    const wholeYearTerm = userdata.term.slice(0, -1);
+    // data = data.filter(course => (course.term.id == userdata.term) || (course.term.id == wholeYearTerm));
+    const currentCourseEditions = [];
+    data.forEach(courseEdition => {
+        currentCourseEditions.push({courseId: courseEdition.course.id, termId: courseEdition.term.id});
+    });
 
-    // const currentCourseUnitsIds = [];
-    // currentCourseEditions.forEach(async function (currentCourseEdition) {
-    //     url = 'https://usosapps.umk.pl/services/courses/course_edition';
-    //     returnObject = null;
-    //     returnObject = await got(url, {
-    //         headers: oauth.toHeader(oauth.authorize({ url: url, method: 'POST' }, token)),
-    //         searchParams: {
-    //             course_id: currentCourseEdition.courseId,
-    //             term_id: currentCourseEdition.termId,
-    //             fields: "course_id|course_name|term_id|user_groups|course_units_ids",
-    //         }
-    //     })
-    //         .catch(function (error) {
-    //             if (error.response) {
-    //                 console.log(error.response.body);
-    //                 return { message: error.response.body };
-    //             }
-    //             else {
-    //                 console.error(error);
-    //             }
-    //         });
-    //     const courseData = JSON.parse(returnObject.body);
-    //     courseData.course_units_ids.forEach(cui => {
-    //         currentCourseUnitsIds.push(cui);
-    //     })
+    const currentCourseUnitsIds = [];
+    currentCourseEditions.forEach(async function (currentCourseEdition) {
+        url = 'https://usosapps.umk.pl/services/courses/course_edition';
+        returnObject = null;
+        returnObject = await got(url, {
+            headers: oauth.toHeader(oauth.authorize({ url: url, method: 'POST' }, token)),
+            searchParams: {
+                course_id: currentCourseEdition.courseId,
+                term_id: currentCourseEdition.termId,
+                fields: "course_id|course_name|term_id|user_groups|course_units_ids",
+            }
+        })
+            .catch(function (error) {
+                if (error.response) {
+                    console.log(error.response.body);
+                    return { message: error.response.body };
+                }
+                else {
+                    console.error(error);
+                }
+            });
+        const courseData = JSON.parse(returnObject.body);
+        courseData.course_units_ids.forEach(cui => {
+            currentCourseUnitsIds.push(cui);
+        })
         
-    // });
+    });
 //////////////
 
 
@@ -609,132 +609,118 @@ const getMyBestSurveys = async function (mongoInfo, token, userdata) {
     const client = await MongoClient.connect(mongoInfo.url, { useUnifiedTopology: true });
 
 
-    // //Część testowania
-let url = 'https://usosapps.umk.pl/services/courses/user'
-const oauth = OAuth({
-    consumer: {
-        key: process.env.OAUTH_CONSUMER_KEY,
-        secret: process.env.OAUTH_CONSUMER_SECRET
-    },
-    signature_method: 'PLAINTEXT',
-});
-let returnObject = null;
-returnObject = await got(url, {
-    headers: oauth.toHeader(oauth.authorize({ url: url, method: 'POST' }, token)),
-    searchParams: {
-        fields: "course_editions",
-    }
-})
-    .catch(function (error) {
-        if (error.response) {
-            console.log(error.response.body);
-            return { message: error.response.body };
-        }
-        else {
-            console.error(error);
-        }
-    })
-const data = JSON.parse(returnObject.body);
-let currentCourses = null;
-const wholeYearTerm = userdata.term.slice(0, -1);
-if (data.course_editions[wholeYearTerm])
-    currentCourses = data.course_editions[userdata.term].concat(data.course_editions[wholeYearTerm]);
-else
-    currentCourses = data.course_editions[userdata.term];
-currentCourseUnitsIds = [];
+//     // //Część testowania
+// let url = 'https://usosapps.umk.pl/services/courses/user'
+// const oauth = OAuth({
+//     consumer: {
+//         key: process.env.OAUTH_CONSUMER_KEY,
+//         secret: process.env.OAUTH_CONSUMER_SECRET
+//     },
+//     signature_method: 'PLAINTEXT',
+// });
+// let returnObject = null;
+// returnObject = await got(url, {
+//     headers: oauth.toHeader(oauth.authorize({ url: url, method: 'POST' }, token)),
+//     searchParams: {
+//         fields: "course_editions",
+//     }
+// })
+//     .catch(function (error) {
+//         if (error.response) {
+//             console.log(error.response.body);
+//             return { message: error.response.body };
+//         }
+//         else {
+//             console.error(error);
+//         }
+//     })
+// const data = JSON.parse(returnObject.body);
+// let currentCourses = null;
+// const wholeYearTerm = userdata.term.slice(0, -1);
+// if (data.course_editions[wholeYearTerm])
+//     currentCourses = data.course_editions[userdata.term].concat(data.course_editions[wholeYearTerm]);
+// else
+//     currentCourses = data.course_editions[userdata.term];
+// currentCourseUnitsIds = [];
 
-if (currentCourses.length > 0) {
-    currentCourses.forEach(course => {
-        if (course.user_groups) {
-            if (course.user_groups.length > 0) {
-                course.user_groups.forEach(userGroup => {
-                    currentCourseUnitsIds.push(userGroup.course_unit_id);
-                })
-            }
-        }
+// if (currentCourses.length > 0) {
+//     currentCourses.forEach(course => {
+//         if (course.user_groups) {
+//             if (course.user_groups.length > 0) {
+//                 course.user_groups.forEach(userGroup => {
+//                     currentCourseUnitsIds.push(userGroup.course_unit_id);
+//                 })
+//             }
+//         }
 
-    })
-}
+//     })
+// }
 //////////////
 
 //Część faktyczna
-    // let url = 'https://usosapps.umk.pl/services/users/user';
-    // const oauth = OAuth({
-    //     consumer: {
-    //         key: process.env.OAUTH_CONSUMER_KEY,
-    //         secret: process.env.OAUTH_CONSUMER_SECRET
-    //     },
-    //     signature_method: 'PLAINTEXT',
-    // });
-    // let returnObject = null;
-    // returnObject = await got(url, {
-    //     headers: oauth.toHeader(oauth.authorize({ url: url, method: 'POST' }, token)),
-    //     searchParams: {
-    //         fields: "course_editions_conducted",
-    //     }
-    // })
-    //     .catch(function (error) {
-    //         if (error.response) {
-    //             console.log(error.response.body);
-    //             return { message: error.response.body };
-    //         }
-    //         else {
-    //             console.error(error);
-    //         }
-    //     });
-    // let data = JSON.parse(returnObject.body);
-    // data = data.course_editions_conducted;
-    // console.log(data);
-    // let currentCourses = null;
-    // const wholeYearTerm = userdata.term.slice(0, -1);
-    // // data = data.filter(course => (course.term.id == userdata.term) || (course.term.id == wholeYearTerm));
-    // const currentCourseEditions = [];
-    // data.forEach(courseEdition => {
-    //     currentCourseEditions.push({courseId: courseEdition.course.id, termId: courseEdition.term.id});
-    // });
+    let url = 'https://usosapps.umk.pl/services/users/user';
+    const oauth = OAuth({
+        consumer: {
+            key: process.env.OAUTH_CONSUMER_KEY,
+            secret: process.env.OAUTH_CONSUMER_SECRET
+        },
+        signature_method: 'PLAINTEXT',
+    });
+    let returnObject = null;
+    returnObject = await got(url, {
+        headers: oauth.toHeader(oauth.authorize({ url: url, method: 'POST' }, token)),
+        searchParams: {
+            fields: "course_editions_conducted",
+        }
+    })
+        .catch(function (error) {
+            if (error.response) {
+                console.log(error.response.body);
+                return { message: error.response.body };
+            }
+            else {
+                console.error(error);
+            }
+        });
+    let data = JSON.parse(returnObject.body);
+    data = data.course_editions_conducted;
+    console.log(data);
+    let currentCourses = null;
+    const wholeYearTerm = userdata.term.slice(0, -1);
+    // data = data.filter(course => (course.term.id == userdata.term) || (course.term.id == wholeYearTerm));
+    const currentCourseEditions = [];
+    data.forEach(courseEdition => {
+        currentCourseEditions.push({courseId: courseEdition.course.id, termId: courseEdition.term.id});
+    });
 
-    // const currentCourseUnitsIds = [];
-    // currentCourseEditions.forEach(async function (currentCourseEdition) {
-    //     url = 'https://usosapps.umk.pl/services/courses/course_edition';
-    //     returnObject = null;
-    //     returnObject = await got(url, {
-    //         headers: oauth.toHeader(oauth.authorize({ url: url, method: 'POST' }, token)),
-    //         searchParams: {
-    //             course_id: currentCourseEdition.courseId,
-    //             term_id: currentCourseEdition.termId,
-    //             fields: "course_id|course_name|term_id|user_groups|course_units_ids",
-    //         }
-    //     })
-    //         .catch(function (error) {
-    //             if (error.response) {
-    //                 console.log(error.response.body);
-    //                 return { message: error.response.body };
-    //             }
-    //             else {
-    //                 console.error(error);
-    //             }
-    //         });
-    //     const courseData = JSON.parse(returnObject.body);
-    //     courseData.course_units_ids.forEach(cui => {
-    //         currentCourseUnitsIds.push(cui);
-    //     })
+    const currentCourseUnitsIds = [];
+    currentCourseEditions.forEach(async function (currentCourseEdition) {
+        url = 'https://usosapps.umk.pl/services/courses/course_edition';
+        returnObject = null;
+        returnObject = await got(url, {
+            headers: oauth.toHeader(oauth.authorize({ url: url, method: 'POST' }, token)),
+            searchParams: {
+                course_id: currentCourseEdition.courseId,
+                term_id: currentCourseEdition.termId,
+                fields: "course_id|course_name|term_id|user_groups|course_units_ids",
+            }
+        })
+            .catch(function (error) {
+                if (error.response) {
+                    console.log(error.response.body);
+                    return { message: error.response.body };
+                }
+                else {
+                    console.error(error);
+                }
+            });
+        const courseData = JSON.parse(returnObject.body);
+        courseData.course_units_ids.forEach(cui => {
+            currentCourseUnitsIds.push(cui);
+        })
         
-    // });
+    });
 //////////////
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     let mySurveys = null;
     await mongoQuery.findQuery(client, mongoInfo, 'course_surveys', { graded: true, "courseInfo.courseUnitId": { $in : currentCourseUnitsIds}})

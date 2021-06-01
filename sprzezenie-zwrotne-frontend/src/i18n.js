@@ -60,7 +60,10 @@ i18n.use(LanguageDetector).init({
                 Semester: "Semester",
                 CommentsForSurvey: "Comments for survey: ",
                 SystemNotOnline: "Sorry, the system is currently down",
-
+                CourseDesc: "Course description",
+                CourseTotalWorkload: "Total student workload",
+                CourseTeachingMethods: "Teaching methods",
+                CourseAssessments: "Assessment methods"
             }
         },
         pl: {
@@ -120,6 +123,11 @@ i18n.use(LanguageDetector).init({
                 Semester: "Semestr",
                 CommentsForSurvey: "Komentarze do ankiety: ",
                 SystemNotOnline: "Przepraszamy, system tymczasowo nie działa",
+                CourseDesc: "Opis przedmiotu",
+                CourseTotalWorkload: "Całkowity nakład pracy studenta",
+                CourseTeachingMethods: "Metody dydaktyczne",
+                CourseAssessments: "Metody i kryteria oceniania"
+
             }
         }
     },

@@ -6,6 +6,7 @@ import MainView from './components/mainView';
 import LogoutButton from './components/logout';
 import i18n from "./i18n";
 import { I18nContext, useTranslation } from "react-i18next";
+let packageJson = require("../package.json");
 
 const drawerWidth = 200;
 
@@ -105,7 +106,7 @@ function App() {
         <CssBaseline />
         <AppBar position="fixed" className={classStyles.appBar} >
           <Toolbar>
-            <Typography variant="h6" className={classStyles.title}>
+            <Typography  variant="h6" className={classStyles.title}>
               {t('Title')}
             </Typography>
             <FormControl variant="outlined">
@@ -138,7 +139,7 @@ function App() {
         <CssBaseline />
         <AppBar position="fixed" className={classStyles.appBar} >
           <Toolbar>
-            <Typography variant="h6" className={classStyles.title}>
+            <Typography  variant="h6" className={classStyles.title}>
               {t('Title')}
             </Typography>
           </Toolbar>
@@ -158,10 +159,10 @@ function App() {
         <CssBaseline />
         <AppBar position="fixed" className={classStyles.appBar} >
           <Toolbar>
-            <Typography variant="h6" className={classStyles.title}>
+            <Typography  variant="h6" className={classStyles.title}>
               {t('Title')}
             </Typography>
-            <Button color="inherit" href="http://localhost:5000/login" target="_self" onClick={(event) => event.preventDefault}>
+            <Button color="inherit" href={packageJson.proxy+ "/login"} target="_self" onClick={(event) => event.preventDefault}>
               {t('Login')}
             </Button>
           </Toolbar>

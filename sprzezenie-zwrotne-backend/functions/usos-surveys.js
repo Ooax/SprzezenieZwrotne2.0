@@ -20,11 +20,11 @@ const getSurveysToFill = async function(token) {
                     fields: "id|survey_type|name|can_i_fill_out|lecturer",
                 }
             });
-            var surveys = JSON.parse(returnObject.body);
-            var unit_ids = "";
+            const surveys = JSON.parse(returnObject.body);
+            let unit_ids = "";
             // return surveys;
             surveys.forEach((element,index) => {
-                var parts = element.id.split("|");
+                const parts = element.id.split("|");
                 if(index>0)
                     unit_ids+="|";
                 unit_ids+=parts[2];
@@ -40,7 +40,7 @@ const getSurveysToFill = async function(token) {
                     format: "json",
                 }
             });
-            var coursesInfo = JSON.parse(returnObject2.body);
+            const coursesInfo = JSON.parse(returnObject2.body);
             surveys.forEach((element) => {
                 element.course_info = coursesInfo[element.unit_id];
             });

@@ -140,4 +140,22 @@ router.post('/updateMySurveyData', function(req, res){
     }
 })
 
+router.post('/getCourseDetails', function (req, res){
+    const courseId = req.body.courseId;
+    console.log(courseId);
+    if (req.session.userData.student_status == 2 && courseId) {
+        if (courseId) {
+            surveys.getCourseDetails(req.session.token, courseId)
+                .then(function (result) {
+                    res.json(result);
+                }).catch(function (err) {
+                    console.error(err);
+                })
+        }
+    }
+    else{
+        res.json({message: "No permission to access resources"})
+    }
+})
+
 module.exports = router;

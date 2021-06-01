@@ -15,17 +15,6 @@ class SurveysUSOSPage extends React.Component {
             surveyToGet: "",
             courseDetailsToGet: "",
             availableSurveysData: null,
-            availableCourseDetails: null,
-            courseEnAv: true,
-            courseName: "",
-            courseLink: "",
-            courseCode: "",
-            courseType: "",
-            courseTotalWorkload: "",
-            courseTeachingMetods: "",
-            courseDesc: "",
-            courseAssessment: "",
-            courseData: null,
             dialogOpen: false
         };
 

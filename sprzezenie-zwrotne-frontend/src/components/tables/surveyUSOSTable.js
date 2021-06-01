@@ -61,7 +61,7 @@ class SurveysUSOSTable extends React.Component {
                             <TableHead>
                                 <TableRow>
                                     <TableCell>{t('Code')}</TableCell>
-                                    <TableCell>{t('Classes')}</TableCell>
+                                    <TableCell>{t('Class')}</TableCell>
                                     <TableCell>{t('Instructor')}</TableCell>
                                 </TableRow>
                             </TableHead>

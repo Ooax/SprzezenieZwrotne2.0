@@ -1,12 +1,10 @@
 import React from 'react';
-import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Box, Tooltip } from '@material-ui/core';
+import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Box } from '@material-ui/core';
 import { lightBlue, grey } from '@material-ui/core/colors';
-import EqualizerIcon from '@material-ui/icons/Equalizer';
-import AddIcon from '@material-ui/icons/Add';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
-import SettingsIcon from '@material-ui/icons/Settings';
 import i18n from '../../i18n';
 import { withTranslation } from 'react-i18next';
+import InfoIcon from '@material-ui/icons/Info';
 
 //Tabela ankiet USOS
 class SurveysUSOSTable extends React.Component {
@@ -17,12 +15,12 @@ class SurveysUSOSTable extends React.Component {
         this.onChosen = this.onChosen.bind(this);
     }
 
-    onChosen(surveyId) {
-        this.props.parentCallback(surveyId);
+    onChosen(surveyId, button) {
+        this.props.parentCallback(surveyId, button);
     }
 
     componentDidMount() {
-    }
+    }     
 
     renderTableRows() {
         return this.props.data.map(function (row, index) {
@@ -35,8 +33,11 @@ class SurveysUSOSTable extends React.Component {
                     <TableCell>{course_info.course_name[i18n.language] + " " + course_info.term_id + " [" + course_info.classtype_id + "] "}</TableCell>
                     <TableCell>{lecturer.first_name + " " + lecturer.last_name}</TableCell>
                     <TableCell>
-                        <IconButton color="primary" aria-label="choose-survey" onClick={() => { this.onChosen(id) }} style={{color: lightBlue[600], background: grey[200]}}>
+                        <IconButton color="primary" aria-label="choose-survey" onClick={() => { this.onChosen(id, "answer") }} style={{color: lightBlue[600], background: grey[200]}}>
                             <QuestionAnswerIcon />
+                        </IconButton>
+                        <IconButton color="primary" aria-label="info-choose-survey" onClick={() => { this.onChosen(course_info.course_id, "info") }} style={{color: lightBlue[600], background: grey[200], marginLeft: 10}}>
+                            <InfoIcon/>
                         </IconButton>
                     </TableCell>
                 </TableRow>
@@ -60,7 +61,7 @@ class SurveysUSOSTable extends React.Component {
                             <TableHead>
                                 <TableRow>
                                     <TableCell>{t('Code')}</TableCell>
-                                    <TableCell>{t('Classes')}</TableCell>
+                                    <TableCell>{t('Class')}</TableCell>
                                     <TableCell>{t('Instructor')}</TableCell>
                                 </TableRow>
                             </TableHead>

@@ -140,6 +140,20 @@ router.post('/updateMySurveyData', function(req, res){
     }
 })
 
+router.post('/getCourseDetails', function (req, res){
+    const courseId = req.body.courseId;
+    console.log(courseId);
+    if (req.session.userData.student_status == 2 && courseId) {
+        if (courseId) {
+            surveys.getCourseDetails(req.session.token, courseId)
+                .then(function (result) {
+                    res.json(result);
+                }).catch(function (err) {
+                    console.error(err);
+                })
+        }
+    }
+})
 router.get('/getMyBestSurveys', function(req, res){
     if(req.session.userData.staff_status == 2 || req.session.userData.student_status == 2){
         surveys.getMyBestSurveys(mongoInfo, req.session.token, req.session.userData)

@@ -28,6 +28,7 @@
   - Port: (domyślnie 5000)
   - Session name oraz session secret (domyślnie "sid" oraz "secretsession123")
   - Frontend link - adres URL działającej aplikacji frontend
+  - Server ip - adres serwera na którym działa system (lokalnie - 127.0.0.1)
 2. Konfiguracja "proxy" w pliku package.json w katalogu sprzezenie-zwrotne-frontend: adres URL do działającej aplikacji backend
 
 #### Test aplikacji backend

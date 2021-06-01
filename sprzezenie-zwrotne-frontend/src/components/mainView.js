@@ -7,7 +7,9 @@ import ManageSurveysPage from './manageSurveys-page.js';
 
 //Glowna zawartosc strony wybierana z szuflady
 export default class MainView extends React.Component {
-
+    constructor(props) {
+        super(props);
+    }
     componentDidMount(){
     }
 
@@ -15,7 +17,7 @@ export default class MainView extends React.Component {
     render() {
         if(this.props.data === "Main")
             return(
-                <MainPage />
+                <MainPage user={this.props.user} />
             )
         else if(this.props.data === "GetSurveys")
             return(

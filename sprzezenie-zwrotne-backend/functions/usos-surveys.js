@@ -20,11 +20,11 @@ const getSurveysToFill = async function(token) {
                     fields: "id|survey_type|name|can_i_fill_out|lecturer",
                 }
             });
-            var surveys = JSON.parse(returnObject.body);
-            var unit_ids = "";
+            const surveys = JSON.parse(returnObject.body);
+            let unit_ids = "";
             // return surveys;
             surveys.forEach((element,index) => {
-                var parts = element.id.split("|");
+                const parts = element.id.split("|");
                 if(index>0)
                     unit_ids+="|";
                 unit_ids+=parts[2];
@@ -40,7 +40,7 @@ const getSurveysToFill = async function(token) {
                     format: "json",
                 }
             });
-            var coursesInfo = JSON.parse(returnObject2.body);
+            const coursesInfo = JSON.parse(returnObject2.body);
             surveys.forEach((element) => {
                 element.course_info = coursesInfo[element.unit_id];
             });
@@ -125,9 +125,42 @@ const fillSurvey = async function(token, data) {
 
 };
 
+//Funkcja pobierajaca szczegoly przedmiotu
+const getCourseDetails = async function(token, data) {
+    let url = 'https://usosapps.umk.pl/services/courses/course'
+    const oauth = OAuth({
+        consumer: {
+            key: process.env.OAUTH_CONSUMER_KEY,
+            secret: process.env.OAUTH_CONSUMER_SECRET
+        },
+        signature_method: 'PLAINTEXT',
+    });
+    try {
+        const returnObject = await got.post(url, {
+            headers: oauth.toHeader(oauth.authorize({url: url, method: 'POST'}, token)),
+            searchParams:{
+                course_id: data,
+                fields: "id|name|homepage_url|profile_url|terms|description|assessment_criteria|learning_outcomes|practical_placement|attributes2",
+                format: "json",
+            }
+        });
+        return JSON.parse(returnObject.body);
+    }
+    catch(error){
+        if(error.response){
+            console.log(error.response.body);
+            return error.response.body;
+        }
+        else{
+            console.error(error);
+        }
+    }
+};
+
 
 module.exports = {
     getSurveysToFill: getSurveysToFill,
     getSurvey: getSurvey,
-    fillSurvey: fillSurvey
+    fillSurvey: fillSurvey,
+    getCourseDetails: getCourseDetails
    };

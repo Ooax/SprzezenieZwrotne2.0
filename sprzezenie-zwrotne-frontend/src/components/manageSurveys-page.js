@@ -1,12 +1,13 @@
 import React from 'react';
 import { Typography, Box } from '@material-ui/core';
-import { StaffSurveysTable } from './tables.js';
+import StaffSurveysTable from './tables/staffSurveyTable.js';
 import SurveyStatistics from './surveyStatistics.js';
 import SurveySettings from './surveySettings.js';
+import { withTranslation } from "react-i18next";
 
 
 //Strona zarzadzania ankietami
-export default class ManageSurveysPage extends React.Component {
+class ManageSurveysPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -58,16 +59,17 @@ export default class ManageSurveysPage extends React.Component {
             },
         });
         const surveysData = await response.json();
-        if(surveysData || surveysData.length > 0)
+        if(surveysData?(surveysData.length > 0):false)
             this.setState({surveysLoaded: true, surveyLoaded: false, surveysAvailableToManage: surveysData});
         else
-            this.setState({surveysLoaded: true, surveyLoaded: false});
+            return
     }
 
 
 
 
     render() {
+        const { t } = this.props;
         return (
             <Box>
                 {
@@ -79,7 +81,7 @@ export default class ManageSurveysPage extends React.Component {
                                 <Box>
                                     <Box mb={2}>
                                         <Typography variant="h5">
-                                            Wybierz ankietę którą chcesz zarządzać
+                                        {t('ChooseSurveyToManage')}
                                     </Typography>
                                     </Box>
                                     <Box>
@@ -142,3 +144,4 @@ export default class ManageSurveysPage extends React.Component {
         )
     }
 }
+export default withTranslation()(ManageSurveysPage);

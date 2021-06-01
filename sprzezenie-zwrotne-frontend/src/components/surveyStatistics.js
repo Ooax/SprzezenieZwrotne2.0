@@ -3,11 +3,13 @@ import { Typography, Box, IconButton } from '@material-ui/core';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import {HorizontalBar} from 'react-chartjs-2';
 import lightBlue from '@material-ui/core/colors/lightBlue';
-import { SurveyCommentsTable } from './tables.js';
+import SurveyCommentsTable from './tables/surveyCommentsTable.js';
+import { withTranslation } from 'react-i18next';
+import i18n from '../i18n';
 
 
 //Komponent statystyk ankiety
-export default class SurveyStatistics extends React.Component {
+class SurveyStatistics extends React.Component {
     constructor(props) {
         super(props);
         this.state={
@@ -21,7 +23,6 @@ export default class SurveyStatistics extends React.Component {
         this.returnButton = this.returnButton.bind(this);
         this.renderHorizontalBars = this.renderHorizontalBars.bind(this);
         this.renderCommentsTable = this.renderCommentsTable.bind(this);
-        this.renderLongLabels = this.renderLongLabels.bind(this);
         this.getMySurveyData = this.getMySurveyData.bind(this);
     }
 
@@ -43,27 +44,22 @@ export default class SurveyStatistics extends React.Component {
                         hoverBorderColor: lightBlue[900],
                         data: []
                       }]
-                },
-                longAnswerLabels: false
+                }
             }
             if(questionData.questionType === "Radio"){
                 questionData.questionStats.datasets[0].label = "Odpowiedzi jednokrotnego wyboru";
-                // questionData.questionStats.datasets[0].label = question.text;
-                question.answers.forEach((questionAnswer, answerIndex) => {
+                question.answers.forEach((questionAnswer) => {
                     questionData.questionStats.labels.push(questionAnswer.text);
-                    if(questionAnswer.text.length > 30)
-                        questionData.longAnswerLabels = true;
-                    questionData.questionStats.datasets[0].data.push(this.state.surveyData.surveyAnswers.filter((surveyAnswer) => surveyAnswer.answers[questionIndex] === questionAnswer.id).length);
+                    questionData.questionStats.datasets[0].data.push(this.state.surveyData.surveyAnswers.filter((surveyAnswer) => 
+                    surveyAnswer.answers[questionIndex] === questionAnswer.id).length);
                 })
             }
             else if(questionData.questionType === "Checkbox"){
                 questionData.questionStats.datasets[0].label = "Odpowiedzi wielokrotnego wyboru";
-                // questionData.questionStats.datasets[0].label = question.text;
                 question.answers.forEach((questionAnswer, answerIndex) => {
                     questionData.questionStats.labels.push(questionAnswer.text);
-                    if(questionAnswer.text.length > 30)
-                        questionData.longAnswerLabels = true;
-                    questionData.questionStats.datasets[0].data.push(this.state.surveyData.surveyAnswers.filter((surveyAnswer) => surveyAnswer.answers[questionIndex][answerIndex] === true).length);
+                    questionData.questionStats.datasets[0].data.push(this.state.surveyData.surveyAnswers.filter((surveyAnswer) => 
+                    surveyAnswer.answers[questionIndex][answerIndex] === true).length);
                 })
             }
             this.questions.push(questionData);
@@ -83,34 +79,13 @@ export default class SurveyStatistics extends React.Component {
     }
 
     renderHorizontalBars(){
+        const { t } = this.props;
         if((this.state.surveyData.surveyAnswers)?(this.state.surveyData.surveyAnswers.length > 0):false)
         {
             return this.questions.map((question, index) => {
-                var answerLabels = [];
-                if(question.longAnswerLabels){
-                    answerLabels = question.questionStats.labels.slice();
-                    for(var i = 0; i < question.questionStats.labels.length; i++){
-                        question.questionStats.labels[i] = i + 1;
-                    };
-                }
                 return(
                     <Box key={"hb-box-"+index} maxWidth="88%" m={4} p={2} border={1} borderRadius="borderRadius">
-                        <Typography variant="h5">
-                            {question.questionText}
-                        </Typography>
                         <HorizontalBar data={question.questionStats} height={300} options={{ maintainAspectRatio: false, scales: {xAxes:[{ticks:{stepSize: 1}}]} }} />
-                        {question.longAnswerLabels?
-                        (
-                            <Box>
-                                <Typography variant="h5">
-                                Odpowiedzi:
-                                </Typography>
-                                {
-                                    this.renderLongLabels(answerLabels)
-                                }
-                            </Box>
-                        )
-                        :false}
                     </Box>
                 )
             })
@@ -119,24 +94,15 @@ export default class SurveyStatistics extends React.Component {
             return (
                 <Box mt={5} color={lightBlue[600]}>
                     <Typography variant="h5" >
-                        Ta ankieta nie ma jeszcze żadnych odpowiedzi
+                        {t('SurveyHasNoAnswers')}
                     </Typography>
                 </Box>
             )
         }
     }
 
-    renderLongLabels(labels){
-        return labels.map((label, index) => {
-            return (
-            <Typography>
-                {index +': ' + label}
-            </Typography>
-            );
-        })
-    }
-
     renderCommentsTable(){
+        const { t } = this.props;
         if((this.state.surveyData.surveyAnswers)?(this.state.surveyData.surveyAnswers.length > 0 && this.comments.length > 0):false){
             return(
                 <Box>
@@ -148,7 +114,7 @@ export default class SurveyStatistics extends React.Component {
             return(
                 <Box mt={5} color={lightBlue[600]}>
                     <Typography variant="h5" >
-                        Brak komentarzy do ankiety
+                        {t('SurveyHasNoComments')}
                     </Typography>
                 </Box>
             )
@@ -180,9 +146,10 @@ export default class SurveyStatistics extends React.Component {
 
 
     render() {
+        const { t } = this.props;
         return (
             (!this.state.loaded)?
-            <div>Loading...</div>:
+            <div>{t('Loading')}</div>:
             <Box>
                 <Box display="flex" alignItems="center" mb={2}>
                     <Box>
@@ -192,12 +159,12 @@ export default class SurveyStatistics extends React.Component {
                     </Box>
                     <Box mr={2}>
                         <Typography variant="h5" display="inline">
-                            Statystyki ankiety:
+                            {t('SurveyStatistics')}
                         </Typography>
                     </Box>
                     <Box>
                         <Typography variant="h5" display="inline">
-                                {this.state.surveyData.courseInfo.courseId + " - " + this.state.surveyData.courseInfo.courseName["pl"] + " [" + this.state.surveyData.courseInfo.classType + "] " +
+                                {this.state.surveyData.courseInfo.courseId + " - " + this.state.surveyData.courseInfo.courseName[i18n.language] + " [" + this.state.surveyData.courseInfo.classType + "] " +
                                 this.state.surveyData.courseInfo.termId}
                         </Typography>
                     </Box>
@@ -212,3 +179,4 @@ export default class SurveyStatistics extends React.Component {
         )
     }
 }
+export default withTranslation()(SurveyStatistics);

@@ -1,13 +1,15 @@
 import React from 'react';
 import { Typography, Box, IconButton, Select, InputLabel, MenuItem, FormControl, FormHelperText, TextField, Button } from '@material-ui/core';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import { withTranslation } from 'react-i18next';
+import i18n from '../i18n';
 
 //Komponent zarzadzania ustawieniami ankiet
 function getCorrectDateFormat(inputDate) {
-    var date = new Date(inputDate);
-    var year = date.getFullYear();
-    var month = date.getMonth() + 1;
-    var day = date.getDate();
+    let date = new Date(inputDate);
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
     if (day < 10) {
         day = '0' + day;
     }
@@ -17,7 +19,7 @@ function getCorrectDateFormat(inputDate) {
     return(year + '-' + month + '-' + day);
 }
 
-export default class SurveySettings extends React.Component {
+class SurveySettings extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -115,9 +117,10 @@ export default class SurveySettings extends React.Component {
 
 
     render() {
+        const { t } = this.props;
         return (
             (!this.state.loaded)?
-            <div>Loading...</div>:
+            <div>{t('Loading')}</div>:
             <Box>
                 <Box display="flex" alignItems="center" mb={4}>
                     <Box>
@@ -127,12 +130,12 @@ export default class SurveySettings extends React.Component {
                     </Box>
                     <Box mr={2}>
                         <Typography variant="h5" display="inline">
-                            Ustawienia ankiety:
+                            {t('SurveySettings')}
                         </Typography>
                     </Box>
                     <Box>
                         <Typography variant="h5" display="inline">
-                                {this.state.surveyData.courseInfo.courseId + " - " + this.state.surveyData.courseInfo.courseName["pl"] + " [" + this.state.surveyData.courseInfo.classType + "] " +
+                                {this.state.surveyData.courseInfo.courseId + " - " + this.state.surveyData.courseInfo.courseName[i18n.language] + " [" + this.state.surveyData.courseInfo.classType + "] " +
                                 this.state.surveyData.courseInfo.termId}
                         </Typography>
                     </Box>
@@ -141,7 +144,7 @@ export default class SurveySettings extends React.Component {
                     <Box mb={4}>
                         <Button variant="contained" onClick={this.updateButtonClick}>
                             <Typography variant="button">
-                                Aktualizuj ankietę
+                                {t('UpdateSurvey')}
                             </Typography>
                         </Button>
                     </Box>
@@ -154,7 +157,7 @@ export default class SurveySettings extends React.Component {
                                 <MenuItem value={true}>Tak</MenuItem>
                                 <MenuItem value={false}>Nie</MenuItem>
                             </Select>
-                            <FormHelperText>Czy udostępnić ankietę?</FormHelperText>
+                            <FormHelperText>{t('ShareSurvey')}</FormHelperText>
                         </FormControl>
                     </Box>
                     {(this.state.isOpen) ?
@@ -169,3 +172,4 @@ export default class SurveySettings extends React.Component {
         )
     }
 }
+export default withTranslation()(SurveySettings);

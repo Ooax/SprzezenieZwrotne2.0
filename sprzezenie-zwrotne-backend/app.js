@@ -15,11 +15,12 @@ const surveysRouter = require('./routers/surveys-router.js')
 
 const {
     PORT = 5000,
-    SESSION_LIFETIME = 1000 * 60 * 30, //1s -> 1m -> 0.5h
+    SESSION_LIFETIME = 1000 * 60 * 60, //1s -> 1m -> 0.5h
     SESSION_NAME = 'sid',
     SESSION_SECRET = 'secretsession123',
     MONGO_URL = "",
-    MONGO_DBNAME = ""
+    MONGO_DBNAME = "",
+    FRONTEND_LINK = "http://192.168.1.30:3000",
 } = process.env
 
 //Strategia, ktora passport bedzie uzywal do uwierzytelniania
@@ -30,7 +31,7 @@ passport.use(new OAuth1Strategy({
     userAuthorizationURL: 'https://usosapps.umk.pl/services/oauth/authorize',
     consumerKey: process.env.OAUTH_CONSUMER_KEY,
     consumerSecret: process.env.OAUTH_CONSUMER_SECRET,
-    callbackURL: "http://127.0.0.1:5000/callback",
+    callbackURL: "http://" + process.env.SERVER_IP +":"+PORT+"/callback",
     signatureMethod: "PLAINTEXT",
 },
     function (token, tokenSecret, profile, cb) {
@@ -130,18 +131,17 @@ app.get('/callback', async function(req, res){
                 req.session.token.secret = session.oauth.oauth_token_secret;
             }
         }).then(function () {
-
             login.callback(req.session.token, verifier, req.session.userData)
                 .then(function () {
-                    req.sessionStore.set(ret[0]._id, req.session, function (err) {
-                        if(err)
-                            console.error(err);
-                    });
-                    req.session.destroy(function(err){
-                        if(err)
-                            console.error(err);
-                    })
-                    res.redirect("http://localhost:3000");
+                    // req.sessionStore.set(ret[0]._id, req.session, function (err) {
+                    //     if(err)
+                    //         console.error(err);
+                    // });
+                    // req.session.destroy(function(err){
+                    //     if(err)
+                    //         console.error(err);
+                    // })
+                    res.redirect(FRONTEND_LINK);
                 })
         });
     });
@@ -178,7 +178,13 @@ function isLoggedIn(req, res, next){
 //Tutaj pobrane moga byc podstawowe dane uzytkownika
 app.get('/getUserInfo', function(req, res){
     res.json(req.session.userData);
-})
+});
+
+//Tutaj pobrane moga byc podstawowe dane uzytkownika
+app.get('/isSystemUp', async function(req, res){
+    const isUp = await login.isSystemUp();
+    res.json({status: isUp});
+});
 
 //Modul funkcji ankiet USOS
 app.use("/usosSurveys", isLoggedIn, usosSurveysRouter);

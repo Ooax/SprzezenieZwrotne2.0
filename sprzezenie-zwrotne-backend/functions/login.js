@@ -86,16 +86,16 @@ const callback = async (token, verifier, userdata) => {
     }
 
     url = 'https://usosapps.umk.pl/services/terms/search'
-    var today = new Date().toISOString().slice(0, 10);
+    const today = new Date().toISOString().slice(0, 10);
     try{
-        var returnObject = await got(url, {
+        const returnObject = await got(url, {
             headers: oauth.toHeader(oauth.authorize({url: url, method: 'POST'}, token)),
             searchParams:{
                 min_finish_date: today,
                 max_start_date: today
             }
         });
-        var terms = JSON.parse(returnObject.body);
+        let terms = JSON.parse(returnObject.body);
         terms.shift();
         userdata.term = terms[0].id;
     }
@@ -117,7 +117,7 @@ const logout = async (token) => {
             headers: oauth.toHeader(oauth.authorize({
                 url: url, method: 'POST'}, token))
         });
-        return(response.body);
+        return (response.body);
     }
     catch(error){
         if(error.response){
@@ -130,11 +130,30 @@ const logout = async (token) => {
     }
 }
 
+const isSystemUp = async () => {
+    url = 'https://usosapps.umk.pl/services/apiref/scopes';
+    try{
+        const response = await got(url);
+        return response.body?true:false;
+    }
+    catch(error){
+        if(error.response){
+            console.log(error.response.body);
+            return false;
+        }
+        else{
+            console.error(error);
+            return false;
+        }
+    }
+}
+
 
 
 
 module.exports = {
     //login: login,
     callback: callback,
-    logout: logout
+    logout: logout,
+    isSystemUp: isSystemUp
 }

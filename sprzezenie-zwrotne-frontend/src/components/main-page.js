@@ -1,18 +1,37 @@
 import React from 'react';
+import { Box } from '@material-ui/core';
+import { withTranslation } from "react-i18next";
+import BestStatistics from './bestStatistics.js';
 
 
-export default class MainPage extends React.Component {
-
+class MainPage extends React.Component {
+    constructor(props) {
+        super(props);
+    }
     componentDidMount(){
     }
 
 
     render() {
+        console.log(this.props);
+        const { t } = this.props;
         return (
-            <div>
-                <h1>Witamy w systemie ankiet</h1>
-                <h2>Wybierz moduł z szuflady</h2>
-            </div>
+            <Box>
+                <Box>
+                    <h1>{t('Welcome')}</h1>
+                    <h2>{t('ChooseModule')}</h2>
+                </Box>
+                {
+                    (this.props.user.staff_status === 2 || this.props.user.student_status === 2) ?
+                    (
+                    <BestStatistics>
+
+                    </BestStatistics>
+                    ) :
+                    false
+                }
+            </Box>
         )
     }
 }
+export default withTranslation()(MainPage);

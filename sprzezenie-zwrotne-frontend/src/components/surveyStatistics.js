@@ -3,7 +3,7 @@ import { Typography, Box, IconButton } from '@material-ui/core';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import {HorizontalBar} from 'react-chartjs-2';
 import lightBlue from '@material-ui/core/colors/lightBlue';
-import { SurveyCommentsTable } from './tables.js';
+import SurveyCommentsTable from './tables/surveyCommentsTable.js';
 import { withTranslation } from 'react-i18next';
 import i18n from '../i18n';
 

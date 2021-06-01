@@ -1,6 +1,6 @@
 import React from 'react';
-import { SurveysTable } from './tables.js';
-import { SurveyComponent } from './questions.js';
+import SurveysTable from './tables/surveyTable.js';
+import SurveyComponent from './questions/surveyQuestion.js';
 import { Typography, Box } from '@material-ui/core';
 import { withTranslation } from 'react-i18next';
 
